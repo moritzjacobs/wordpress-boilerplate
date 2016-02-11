@@ -19,7 +19,7 @@ This is a boilerplate and installation script for Wordpress with the WP core as 
 
 ## Instructions
 
-1. Surf to <http://<your_host>/_install.php>
+1. Surf to <http://\<your_host\>/_install.php>
 2. Follow the instructions
 3. Delete `_install.php`, `wp-config-runtime-sample.php` and `wp-config-sample.php`
 4. Double check `wp-config.php`
