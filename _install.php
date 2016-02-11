@@ -43,6 +43,7 @@
 		
 		.monospaced {
 			font-family: monospace;
+			margin-top: 50px;
 		}
 
 		input[type=submit] {
@@ -88,7 +89,170 @@
 				<form method="post" action="">
 					<div class="form-group">
 						<label for="lang">Language code (e.g. en or de)</label>
-						<input type="text" class="form-control" value="en" name="lang">
+						<select class="form-control" name="lang">
+							<option value="en">English (American)</option>
+							<option value="de_DE">German</option>
+							<option value="af">Afrikaans</option>
+							<option value="ak">Akan</option>
+							<option value="sq">Albanian</option>
+							<option value="arq">Algerian Arabic</option>
+							<option value="am">Amharic</option>
+							<option value="ar">Arabic</option>
+							<option value="hy">Armenian</option>
+							<option value="rup_MK">Aromanian</option>
+							<option value="frp">Arpitan</option>
+							<option value="as">Assamese</option>
+							<option value="az">Azerbaijani</option>
+							<option value="az_TR">Azerbaijani (Turkey)</option>
+							<option value="bcc">Balochi Southern</option>
+							<option value="ba">Bashkir</option>
+							<option value="eu">Basque</option>
+							<option value="bel">Belarusian</option>
+							<option value="bn_BD">Bengali</option>
+							<option value="bs_BA">Bosnian</option>
+							<option value="bre">Breton</option>
+							<option value="bg_BG">Bulgarian</option>
+							<option value="ca">Catalan</option>
+							<option value="bal">Catalan (Balear)</option>
+							<option value="ceb">Cebuano</option>
+							<option value="zh_CN">Chinese (China)</option>
+							<option value="zh_HK">Chinese (Hong Kong)</option>
+							<option value="zh_TW">Chinese (Taiwan)</option>
+							<option value="co">Corsican</option>
+							<option value="hr">Croatian</option>
+							<option value="cs_CZ">Czech</option>
+							<option value="da_DK">Danish</option>
+							<option value="dv">Dhivehi</option>
+							<option value="nl_NL">Dutch</option>
+							<option value="nl_BE">Dutch (Belgium)</option>
+							<option value="dzo">Dzongkha</option>
+							<option value="art_xemoji">Emoji</option>
+							<option value="en_AU">English (Australia)</option>
+							<option value="en_CA">English (Canada)</option>
+							<option value="en_NZ">English (New Zealand)</option>
+							<option value="en_ZA">English (South Africa)</option>
+							<option value="en_GB">English (UK)</option>
+							<option value="eo">Esperanto</option>
+							<option value="et">Estonian</option>
+							<option value="fo">Faroese</option>
+							<option value="fi">Finnish</option>
+							<option value="fr_BE">French (Belgium)</option>
+							<option value="fr_CA">French (Canada)</option>
+							<option value="fr_FR">French (France)</option>
+							<option value="fy">Frisian</option>
+							<option value="fur">Friulian</option>
+							<option value="fuc">Fulah</option>
+							<option value="gl_ES">Galician</option>
+							<option value="ka_GE">Georgian</option>
+							<option value="de_DE">German</option>
+							<option value="de_CH">German (Switzerland)</option>
+							<option value="el">Greek</option>
+							<option value="kal">Greenlandic</option>
+							<option value="gn">Guaraní</option>
+							<option value="gu">Gujarati</option>
+							<option value="haw_US">Hawaiian</option>
+							<option value="haz">Hazaragi</option>
+							<option value="he_IL">Hebrew</option>
+							<option value="hi_IN">Hindi</option>
+							<option value="hu_HU">Hungarian</option>
+							<option value="is_IS">Icelandic</option>
+							<option value="ido">Ido</option>
+							<option value="id_ID">Indonesian</option>
+							<option value="ga">Irish</option>
+							<option value="it_IT">Italian</option>
+							<option value="ja">Japanese</option>
+							<option value="jv_ID">Javanese</option>
+							<option value="kab">Kabyle</option>
+							<option value="kn">Kannada</option>
+							<option value="kk">Kazakh</option>
+							<option value="km">Khmer</option>
+							<option value="kin">Kinyarwanda</option>
+							<option value="ky_KY">Kirghiz</option>
+							<option value="ko_KR">Korean</option>
+							<option value="ckb">Kurdish (Sorani)</option>
+							<option value="lo">Lao</option>
+							<option value="lv">Latvian</option>
+							<option value="li">Limburgish</option>
+							<option value="lin">Lingala</option>
+							<option value="lt_LT">Lithuanian</option>
+							<option value="lb_LU">Luxembourgish</option>
+							<option value="mk_MK">Macedonian</option>
+							<option value="mg_MG">Malagasy</option>
+							<option value="ms_MY">Malay</option>
+							<option value="ml_IN">Malayalam</option>
+							<option value="mri">Maori</option>
+							<option value="mr">Marathi</option>
+							<option value="xmf">Mingrelian</option>
+							<option value="mn">Mongolian</option>
+							<option value="me_ME">Montenegrin</option>
+							<option value="ary">Moroccan Arabic</option>
+							<option value="my_MM">Myanmar (Burmese)</option>
+							<option value="ne_NP">Nepali</option>
+							<option value="nb_NO">Norwegian (Bokmål)</option>
+							<option value="nn_NO">Norwegian (Nynorsk)</option>
+							<option value="oci">Occitan</option>
+							<option value="ory">Oriya</option>
+							<option value="os">Ossetic</option>
+							<option value="ps">Pashto</option>
+							<option value="fa_IR">Persian</option>
+							<option value="fa_AF">Persian (Afghanistan)</option>
+							<option value="pl_PL">Polish</option>
+							<option value="pt_BR">Portuguese (Brazil)</option>
+							<option value="pt_PT">Portuguese (Portugal)</option>
+							<option value="pa_IN">Punjabi</option>
+							<option value="rhg">Rohingya</option>
+							<option value="ro_RO">Romanian</option>
+							<option value="roh">Romansh Vallader</option>
+							<option value="ru_RU">Russian</option>
+							<option value="rue">Rusyn</option>
+							<option value="sah">Sakha</option>
+							<option value="sa_IN">Sanskrit</option>
+							<option value="srd">Sardinian</option>
+							<option value="gd">Scottish Gaelic</option>
+							<option value="sr_RS">Serbian</option>
+							<option value="szl">Silesian</option>
+							<option value="snd">Sindhi</option>
+							<option value="si_LK">Sinhala</option>
+							<option value="sk_SK">Slovak</option>
+							<option value="sl_SI">Slovenian</option>
+							<option value="so_SO">Somali</option>
+							<option value="azb">South Azerbaijani</option>
+							<option value="es_AR">Spanish (Argentina)</option>
+							<option value="es_CL">Spanish (Chile)</option>
+							<option value="es_CO">Spanish (Colombia)</option>
+							<option value="es_GT">Spanish (Guatemala)</option>
+							<option value="es_MX">Spanish (Mexico)</option>
+							<option value="es_PE">Spanish (Peru)</option>
+							<option value="es_PR">Spanish (Puerto Rico)</option>
+							<option value="es_ES">Spanish (Spain)</option>
+							<option value="es_VE">Spanish (Venezuela)</option>
+							<option value="su_ID">Sundanese</option>
+							<option value="sw">Swahili</option>
+							<option value="sv_SE">Swedish</option>
+							<option value="gsw">Swiss German</option>
+							<option value="tl">Tagalog</option>
+							<option value="tah">Tahitian</option>
+							<option value="tg">Tajik</option>
+							<option value="tzm">Tamazight (Central Atlas)</option>
+							<option value="ta_IN">Tamil</option>
+							<option value="ta_LK">Tamil (Sri Lanka)</option>
+							<option value="tt_RU">Tatar</option>
+							<option value="te">Telugu</option>
+							<option value="th">Thai</option>
+							<option value="bo">Tibetan</option>
+							<option value="tir">Tigrinya</option>
+							<option value="tr_TR">Turkish</option>
+							<option value="tuk">Turkmen</option>
+							<option value="twd">Tweants</option>
+							<option value="ug_CN">Uighur</option>
+							<option value="uk">Ukrainian</option>
+							<option value="ur">Urdu</option>
+							<option value="uz_UZ">Uzbek</option>
+							<option value="vi">Vietnamese</option>
+							<option value="wa">Walloon</option>
+							<option value="cy">Welsh</option>
+							<option value="yor">Yoruba</option>
+						</select>
 					</div>
 					<div class="form-group">
 						<label for="core_dir">Core dir name</label>
@@ -151,7 +315,7 @@
 
 
 	/**
-	 * __construct function.
+	 * Main function for processing the installation
 	 * 
 	 * @access public
 	 * @param string $lang (default: "en")
@@ -165,17 +329,15 @@
 	public function __construct($lang = "en", $core_name = "core", $content_name = "wp-content", $runtimes_str = "live, staging, local") {
 		// Init vars
 		$this->notice_cnt = 0;
-		$this->critical_cnt = 0;
 		$this->error_cnt = 0;
 
 		// Configure download link
-		// it => https://it.wordpress.org/latest-it_IT.zip
 		if($lang == "en") {
 			$this->_wp_zip_url = "https://wordpress.org/latest.zip";
 		} else {
-			$this->_wp_zip_url = "https://".$lang.".wordpress.org/latest-".$lang."_".strtoupper($lang).".zip";
+			$this->_wp_zip_url = "https://".$lang.".wordpress.org/latest-".$lang.".zip";
 		}
-		
+		$this->debug($this->_wp_zip_url);
 		// ignore empty runtimes
 		if(!empty($runtimes_str)) {
 			$runtimes = array_map('trim', explode(",",$runtimes_str));
@@ -184,8 +346,14 @@
 		}
 
 		$this->head("Let's go!");
-		$this->debug("Config: '".implode("', '", func_get_args()) . "'");
-		
+		$this->debug('language: ' .$lang.'<br>
+			core path: ' .$core_name.'<br>
+			content path: ' . $content_name.'<br>
+			runtime configs: ' . $runtimes_str.'<br>
+		');
+
+
+
 		// init cURL
 		$this->curl = curl_init();
 		curl_setopt($this->curl, CURLOPT_HEADER, false);
@@ -195,12 +363,23 @@
 		curl_setopt($this->curl, CURLOPT_SSL_VERIFYHOST, false);
 		curl_setopt($this->curl, CURLOPT_FAILONERROR, true);
 		
+		// display current host runtime
 		$this->runtime_info();
-		$this->hr();;
+		$this->hr();
 
+		// process core
 		$this->download_core($core_name);
+		
+		
+		// change absolute paths to new core dir
+		$this->set_core_path("index.php", $core_name);
+		$this->set_core_path("htaccess", $core_name);
+		
+		// process runtimes
 		$switch = $this->create_runtimes($runtimes);
-		$this->prepare_wp_config($core_name, $content_name, $switch);
+		
+		// make wp-config
+		$this->prepare_wp_config($core_name, $content_name, $lang, $switch);
 		
 		// rename wp-content
 		$rename_wp_cont = $content_name!= "wp-content" && file_exists(__DIR__.DIRECTORY_SEPARATOR."wp-content") && is_dir(__DIR__.DIRECTORY_SEPARATOR."wp-content");
@@ -211,47 +390,36 @@
 			}
 		}
 		
-		// 
+		// prepare .gitignore
+		$this->sar_in_file("gitignore", "wp-content/", $content_name."/");
+		
+		// english lamguage Wordpress *has no translation files*
 		if($lang != "en") {
 			$this->copy_languages($core_name, $content_name);
 		}
 		curl_close($this->curl);
 
-		$conclusion = $this->notice_cnt . " notices, ".($this->critical_cnt + $this->error_cnt). " errors!";
-		if ($this->critical_cnt + $this->error_cnt == 0) {
+		// display the number of errors and notices
+		$conclusion = $this->notice_cnt . " notices, ".$this->error_cnt. " errors!";
+		if ($this->error_cnt == 0) {
 			$this->notice($conclusion);
 		} else {
-			$this->critical($conclusion);
+			$this->error($conclusion);
 		}
 
 		$this->head("Installation finished!");
-
 		$this->log("Go ahead and edit your runtime configs!");
 	}
 
 
-	/**
-	 * write_to_file function.
-	 *
-	 * @access private
-	 * @param mixed $file
-	 * @param mixed $content
-	 * @return void
-	 */
-	private function write_to_file($file, $content, $force = false) {
-		if (!$force && file_exists($file)) {
-			$this->notice("Refusing to overwrite ".$file);
-			return false;
-		}
-		return file_put_contents($file, $content);
-	}
 
 
 	/**
-	 * log function.
-	 *
+	 * print to screen
+	 * 
 	 * @access private
 	 * @param mixed $str
+	 * @param bool $spinner (default: true)
 	 * @return void
 	 */
 	private function log($str, $spinner = true) {
@@ -260,6 +428,12 @@
 		@ob_flush();
 	}
 
+	/**
+	 * display horizontal line
+	 * 
+	 * @access private
+	 * @return void
+	 */
 	private function hr() {
 		echo "<hr>";
 		@flush();
@@ -268,8 +442,8 @@
 
 
 	/**
-	 * debug function.
-	 *
+	 * display debug info
+	 * 
 	 * @access private
 	 * @param mixed $str
 	 * @return void
@@ -280,8 +454,8 @@
 
 
 	/**
-	 * head function.
-	 *
+	 * display head
+	 * 
 	 * @access private
 	 * @param mixed $str
 	 * @return void
@@ -292,8 +466,8 @@
 
 
 	/**
-	 * notice function.
-	 *
+	 * display notice
+	 * 
 	 * @access private
 	 * @param mixed $str
 	 * @return void
@@ -305,21 +479,8 @@
 
 
 	/**
-	 * critical function.
-	 *
-	 * @access private
-	 * @param mixed $str
-	 * @return void
-	 */
-	private function critical($str) {
-		$this->critical_cnt;
-		$this->log("<span style='color:red;font-weight:bold'>".$str. "</span>");
-	}
-
-
-	/**
-	 * error function.
-	 *
+	 * display error and die()
+	 * 
 	 * @access private
 	 * @param mixed $str
 	 * @return void
@@ -332,15 +493,35 @@
 	}
 
 
+
 	/**
-	 * copy_languages function.
-	 *
+	 * write to a file without overwriting (= force option)
+	 * 
+	 * @access private
+	 * @param mixed $file
+	 * @param mixed $content
+	 * @param bool $force (default: false)
+	 * @return void
+	 */
+	private function write_to_file($file, $content, $force = false) {
+		if (!$force && file_exists($file)) {
+			$this->notice("Refusing to overwrite ".$file);
+			return false;
+		}
+		return file_put_contents($file, $content);
+	}
+
+
+	/**
+	 * Migrate translation files from the core
+	 * 
 	 * @access private
 	 * @param mixed $core_name
 	 * @param mixed $content_name
 	 * @return void
 	 */
 	private function copy_languages($core_name, $content_name) {
+		// Is there already a core?
 		if ($this->core_exists($core_name)) {
 			$source = __DIR__.DIRECTORY_SEPARATOR.$core_name.DIRECTORY_SEPARATOR."wp-content/languages";
 			$dest = __DIR__.DIRECTORY_SEPARATOR.$content_name.DIRECTORY_SEPARATOR."languages";
@@ -353,6 +534,8 @@
 				$this->notice("Core has no translation files");
 				return false;
 			}
+			
+			// recursive copy
 			mkdir($dest, 0755);
 			foreach (
 				$iterator = new \RecursiveIteratorIterator(
@@ -371,36 +554,55 @@
 	}
 
 
+
+
 	/**
-	 * prepare_wp_config function.
-	 *
+	 * Make a new wp-config and change some things
+	 * 
 	 * @access private
+	 * @param mixed $core_name
+	 * @param mixed $content_name
+	 * @param string $lang (default: "en")
+	 * @param string $switch (default: "")
 	 * @return void
 	 */
-	private function prepare_wp_config($core_name, $content_name, $switch = "") {
+	private function prepare_wp_config($core_name, $content_name, $lang = "en", $switch = "") {
+		
+		// random db prefix
 		$rnd_prefix = str_split("abcdefghijklmnopqrstuvwxyz");
 		shuffle($rnd_prefix);
 		$rnd_prefix = join(array_slice($rnd_prefix, 0, 3));
 		$wp_config = file_get_contents(__DIR__.DIRECTORY_SEPARATOR."wp-config-sample.php");
 		$wp_config = str_replace('// {{TABLE_PREFIX}}', '$table_prefix  = \''.$rnd_prefix.'_\';', $wp_config);
 
+		// add fallback security keys
 		$sec_keys = $this->get_sec_keys();
 		$wp_config = str_replace("// {{SECURITY_KEYS}}", $sec_keys, $wp_config);
+		
+		// change core and content path
 		$wp_config = str_replace("wordpress-core-dependency", $core_name, $wp_config);
 		$wp_config = str_replace("wp-content", $content_name, $wp_config);
+		
+		// add switch
 		$wp_config = str_replace('// {{RUNTIME_SWITCH}}', $switch, $wp_config);
+		
+		// add WP_LANG
+		
+		$lang_code = $lang == "en" ? "" : "define('WPLANG', '".$lang."');";
+		$wp_config = str_replace('// {{WP_LANG}}', $lang_code, $wp_config);
 
-		if ($this->write_to_file(__DIR__.DIRECTORY_SEPARATOR."wp-config.php", $wp_config, true)) {
+		if ($this->write_to_file(__DIR__.DIRECTORY_SEPARATOR."wp-config.php", $wp_config)) {
 			$this->debug("Your table prefix is: " . $rnd_prefix);
 		}
 
-		$this->hr();;
+		$this->hr();
 	}
 
 
+
 	/**
-	 * get_sec_keys function.
-	 *
+	 * Download a new set of security keys from the wordpress.org API
+	 * 
 	 * @access private
 	 * @return void
 	 */
@@ -419,9 +621,10 @@
 	}
 
 
+
 	/**
-	 * runtime_info function.
-	 *
+	 * Display info about the predicted runtime for our defaults of "dev", "local", "staging" and "preview"
+	 * 
 	 * @access private
 	 * @return void
 	 */
@@ -442,16 +645,21 @@
 	}
 
 
+
 	/**
-	 * create_runtimes function.
-	 *
+	 * handle the runtime config creation.
+	 * 
 	 * @access private
 	 * @param mixed $runtimes
 	 * @return void
 	 */
 	private function create_runtimes($runtimes) {
 		$this->log("Creating runtimes:");
+		
+		// load the template
 		$tmp = file_get_contents(__DIR__.DIRECTORY_SEPARATOR."wp-config-runtime-sample.php");
+		
+		// create a switch statement inline
 		$switch = "switch(true){\n";
 		$use_switch = false;
 		foreach ($runtimes as $rt_name) {
@@ -461,10 +669,13 @@
 		$runtime_env = "'.$rt_name.'";
 		break;
 	';
-			$use_switch = true;
+				$use_switch = true;
 			}
+			
 			$rt_file_content = $tmp;
 			$this->log("Creating runtime config: " . $rt_name);
+			
+			// add new security key
 			$sec_keys = $this->get_sec_keys();
 
 			$rt_file_content = str_replace("// {{SECURITY_KEYS}}", $sec_keys, $rt_file_content);
@@ -474,15 +685,16 @@
 		}
 		$switch .= "\n}";
 		
-		$this->hr();;
+		$this->hr();
 		
+		// return switch to main function
 		return $use_switch ? $switch : "";
 	}
 
 
 	/**
-	 * core_exists function.
-	 *
+	 * does a core already exist?
+	 * 
 	 * @access private
 	 * @param string $core_name (default: "core")
 	 * @return void
@@ -493,31 +705,59 @@
 	}
 
 
-	private function set_core_path($file, $core_name) {
+	/**
+	 * open a file, search and replace
+	 * 
+	 * @access private
+	 * @param mixed $file
+	 * @param mixed $search
+	 * @param mixed $replace
+	 * @return void
+	 */
+	private function sar_in_file($file, $search, $replace) {
 		$content = file_get_contents(__DIR__.DIRECTORY_SEPARATOR.$file);
-		$content = str_replace('/core/', '/'.$core_name.'/', $content);
+		$content = str_replace($search, $replace, $content);
 		$this->write_to_file(__DIR__.DIRECTORY_SEPARATOR.$file, $content, true);
+		
 	}
 
+
 	/**
-	 * download_core function.
-	 *
+	 * Replace default core dir
+	 * 
+	 * @access private
+	 * @param mixed $file
+	 * @param mixed $core_name
+	 * @return void
+	 */
+	private function set_core_path($file, $core_name) {
+		$this->sar_in_file($file, "/core/", "/".$core_name."/");
+	}
+
+
+
+	/**
+	 * download the Wordpress core
+	 * 
 	 * @access private
 	 * @param mixed $core_name
 	 * @param mixed $core_dest (default: __DIR__)
 	 * @return void
 	 */
 	private function download_core($core_name, $core_dest = __DIR__) {
+		
+		// we already have a core
 		if ($this->core_exists($core_name)) {
 			$this->notice("Skipping core download...");
-			$this->hr();;
+			$this->hr();
 			return false;
 		}
 
+		// make tmp
 		$zip_tmp = tempnam(sys_get_temp_dir(), "zip");
 		$zip_res = fopen($zip_tmp, "w");
 
-		// Get The Zip File From Server
+		// download zip file
 		curl_setopt($this->curl, CURLOPT_URL, $this->_wp_zip_url);
 		curl_setopt($this->curl, CURLOPT_BINARYTRANSFER, true);
 		curl_setopt($this->curl, CURLOPT_FRESH_CONNECT, false);
@@ -530,25 +770,22 @@
 			$this->error("cURL: The language code is probably at fault for this...<br>".curl_error($this->curl));
 		}
 
-		/* Open the Zip file */
+		// unzip
 		$zip = new ZipArchive;
 		$this->log("Start unzipping core");
 		if ($zip->open($zip_tmp) != "true") {
 			$this->error("notice: Unable to open zip File");
 		}
-		/* Extract Zip File */
+
 		$zip->extractTo($core_dest);
 		$zip->close();
 
+		// rename core dir as wished
 		if (!rename(__DIR__.DIRECTORY_SEPARATOR."wordpress", __DIR__.DIRECTORY_SEPARATOR.$core_name)) {
 			$this->error("notice: unable to rename core folder");
 		}
 		
-		
-		$this->set_core_path("index.php", $core_name);
-		$this->set_core_path("htaccess", $core_name);
-		
-		$this->hr();;
+		$this->hr();
 	}
 
 

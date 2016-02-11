@@ -8,15 +8,15 @@ wp-config-local.php
 sitemap.xml
 sitemap.xml.gz
 wp-config.php
-site/advanced-cache.php
-site/backup-db/
-site/backups/
-site/blogs.dir/
-site/cache/
-site/upgrade/
-site/uploads/
-site/wp-cache-config.php
-site/plugins/hello.php
+wp-content/advanced-cache.php
+wp-content/backup-db/
+wp-content/backups/
+wp-content/blogs.dir/
+wp-content/cache/
+wp-content/upgrade/
+wp-content/uploads/
+wp-content/wp-cache-config.php
+wp-content/plugins/hello.php
 
 /readme.html
 /license.txt
