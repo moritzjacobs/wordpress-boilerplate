@@ -1,0 +1,45 @@
+# Redirect /admin and /login
+RewriteRule ^admin/?$ /core/wp-admin/ [R,L]
+RewriteRule ^login/?$ /core/wp-login.php [R,L]
+
+# BEGIN WordPress
+<IfModule mod_rewrite.c>
+RewriteEngine On
+RewriteBase /
+RewriteRule ^index\.php$ - [L]
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule . /index.php [L]
+</IfModule>
+# END WordPress
+
+# Security permissions
+<files wp-config.php>
+order allow,deny
+deny from all
+</files>
+
+<files wordpress.conf>
+order allow,deny
+deny from all
+</files>
+
+<files composer.json>
+order allow,deny
+deny from all
+</files>
+
+<files composer.lock>
+order allow,deny
+deny from all
+</files>
+
+<files readme.html>
+Order allow,deny
+Deny from all
+</files>
+
+<files readme.txt>
+Order allow,deny
+Deny from all
+</files>
