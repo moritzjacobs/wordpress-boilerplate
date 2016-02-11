@@ -24,15 +24,15 @@ switch(true) {
 
 define('WP_SERVER_ENVIRONMENT', $runtime_env);
 
-define('WP_CORE_DIRNAME', "wordpress-core-dependency");
-define('WP_CONTENT_DIRNAME', "wp-content");
+$core_dir = "wordpress-core-dependency";
+$content_dir = "wp-content";
 
 // =================================================
 // Custom Content Directory (change if renamed)
 // =================================================
-define('WP_CONTENT_URL', 'http://'.$_SERVER['SERVER_NAME'].'/'.WP_CONTENT_DIRNAME);
-define('WP_CONTENT_DIR', __DIR__.'/'.WP_CONTENT_DIRNAME);
-define('WP_ROOT', __DIR__."/".WP_CORE_DIRNAME);
+define('WP_CONTENT_URL', 'http://'.$_SERVER['SERVER_NAME'].'/'.$content_dir);
+define('WP_CONTENT_DIR', __DIR__.'/'.$content_dir);
+define('WP_ROOT', __DIR__."/".$core_dir);
 
 // ================================================
 // You almost certainly do not want to change these
@@ -59,20 +59,20 @@ define('DB_COLLATE', '');
 // Language
 // Leave blank for American English
 // ================================
-define('WPLANG', 'de_DE');
+define('WPLANG', 'en_EN');
 
 // ===========
 // Hide errors
 // ===========
 ini_set('display_errors', 0);
-define('WP_DEBUG_DISPLAY', true);
+define('WP_DEBUG_DISPLAY', false);
 
 // ===================================================
 // Load database info and local development parameters
 // ===================================================
-if (file_exists(dirname(__FILE__) . "/wp-config-$runtime_env.php")) {
+if (file_exists(dirname(__FILE__) . "/wp-config-".$runtime_env.".php")) {
 	define('WP_LOCAL_DEV', true);
-	include(dirname(__FILE__) . "/wp-config-$runtime_env.php");
+	include(dirname(__FILE__) . "/wp-config-".$runtime_env.".php");
 }
 
 // ======================================
@@ -85,7 +85,7 @@ if (file_exists(dirname(__FILE__) . '/memcached.php'))
 // Bootstrap WordPress
 // ===================
 if (!defined('ABSPATH'))
-	define('ABSPATH', dirname(__FILE__) . '/'.WP_CORE_DIRNAME.'/');
+	define('ABSPATH', dirname(__FILE__) . '/'.$core_dir.'/');
 
 /** Sets up WordPress vars and included files. */
 require_once(ABSPATH . 'wp-settings.php');

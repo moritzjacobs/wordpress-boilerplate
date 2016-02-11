@@ -43,6 +43,7 @@
 		
 		.monospaced {
 			font-family: monospace;
+			margin-top: 50px;
 		}
 
 		input[type=submit] {
@@ -151,7 +152,7 @@
 
 
 	/**
-	 * __construct function.
+	 * Main function for processing the installation
 	 * 
 	 * @access public
 	 * @param string $lang (default: "en")
@@ -165,7 +166,6 @@
 	public function __construct($lang = "en", $core_name = "core", $content_name = "wp-content", $runtimes_str = "live, staging, local") {
 		// Init vars
 		$this->notice_cnt = 0;
-		$this->critical_cnt = 0;
 		$this->error_cnt = 0;
 
 		// Configure download link
@@ -195,12 +195,18 @@
 		curl_setopt($this->curl, CURLOPT_SSL_VERIFYHOST, false);
 		curl_setopt($this->curl, CURLOPT_FAILONERROR, true);
 		
+		// display current host runtime
 		$this->runtime_info();
 		$this->hr();;
 
+		// process core
 		$this->download_core($core_name);
+		
+		// process runtimes
 		$switch = $this->create_runtimes($runtimes);
-		$this->prepare_wp_config($core_name, $content_name, $switch);
+		
+		// make wp-config
+		$this->prepare_wp_config($core_name, $content_name, $lang, $switch);
 		
 		// rename wp-content
 		$rename_wp_cont = $content_name!= "wp-content" && file_exists(__DIR__.DIRECTORY_SEPARATOR."wp-content") && is_dir(__DIR__.DIRECTORY_SEPARATOR."wp-content");
@@ -211,47 +217,33 @@
 			}
 		}
 		
-		// 
+		// english lamguage Wordpress *has no translation files*
 		if($lang != "en") {
 			$this->copy_languages($core_name, $content_name);
 		}
 		curl_close($this->curl);
 
-		$conclusion = $this->notice_cnt . " notices, ".($this->critical_cnt + $this->error_cnt). " errors!";
-		if ($this->critical_cnt + $this->error_cnt == 0) {
+		// display the number of errors and notices
+		$conclusion = $this->notice_cnt . " notices, ".$this->error_cnt. " errors!";
+		if ($this->error_cnt == 0) {
 			$this->notice($conclusion);
 		} else {
-			$this->critical($conclusion);
+			$this->error($conclusion);
 		}
 
 		$this->head("Installation finished!");
-
 		$this->log("Go ahead and edit your runtime configs!");
 	}
 
 
-	/**
-	 * write_to_file function.
-	 *
-	 * @access private
-	 * @param mixed $file
-	 * @param mixed $content
-	 * @return void
-	 */
-	private function write_to_file($file, $content, $force = false) {
-		if (!$force && file_exists($file)) {
-			$this->notice("Refusing to overwrite ".$file);
-			return false;
-		}
-		return file_put_contents($file, $content);
-	}
 
 
 	/**
-	 * log function.
-	 *
+	 * print to screen
+	 * 
 	 * @access private
 	 * @param mixed $str
+	 * @param bool $spinner (default: true)
 	 * @return void
 	 */
 	private function log($str, $spinner = true) {
@@ -260,6 +252,12 @@
 		@ob_flush();
 	}
 
+	/**
+	 * display horizontal line
+	 * 
+	 * @access private
+	 * @return void
+	 */
 	private function hr() {
 		echo "<hr>";
 		@flush();
@@ -268,8 +266,8 @@
 
 
 	/**
-	 * debug function.
-	 *
+	 * display debug info
+	 * 
 	 * @access private
 	 * @param mixed $str
 	 * @return void
@@ -280,8 +278,8 @@
 
 
 	/**
-	 * head function.
-	 *
+	 * display head
+	 * 
 	 * @access private
 	 * @param mixed $str
 	 * @return void
@@ -292,8 +290,8 @@
 
 
 	/**
-	 * notice function.
-	 *
+	 * display notice
+	 * 
 	 * @access private
 	 * @param mixed $str
 	 * @return void
@@ -305,21 +303,8 @@
 
 
 	/**
-	 * critical function.
-	 *
-	 * @access private
-	 * @param mixed $str
-	 * @return void
-	 */
-	private function critical($str) {
-		$this->critical_cnt;
-		$this->log("<span style='color:red;font-weight:bold'>".$str. "</span>");
-	}
-
-
-	/**
-	 * error function.
-	 *
+	 * display error and die()
+	 * 
 	 * @access private
 	 * @param mixed $str
 	 * @return void
@@ -332,15 +317,35 @@
 	}
 
 
+
 	/**
-	 * copy_languages function.
-	 *
+	 * write to a file without overwriting (= force option)
+	 * 
+	 * @access private
+	 * @param mixed $file
+	 * @param mixed $content
+	 * @param bool $force (default: false)
+	 * @return void
+	 */
+	private function write_to_file($file, $content, $force = false) {
+		if (!$force && file_exists($file)) {
+			$this->notice("Refusing to overwrite ".$file);
+			return false;
+		}
+		return file_put_contents($file, $content);
+	}
+
+
+	/**
+	 * Migrate translation files from the core
+	 * 
 	 * @access private
 	 * @param mixed $core_name
 	 * @param mixed $content_name
 	 * @return void
 	 */
 	private function copy_languages($core_name, $content_name) {
+		// Is there already a core?
 		if ($this->core_exists($core_name)) {
 			$source = __DIR__.DIRECTORY_SEPARATOR.$core_name.DIRECTORY_SEPARATOR."wp-content/languages";
 			$dest = __DIR__.DIRECTORY_SEPARATOR.$content_name.DIRECTORY_SEPARATOR."languages";
@@ -353,6 +358,8 @@
 				$this->notice("Core has no translation files");
 				return false;
 			}
+			
+			// recursive copy
 			mkdir($dest, 0755);
 			foreach (
 				$iterator = new \RecursiveIteratorIterator(
@@ -371,24 +378,38 @@
 	}
 
 
+
+
 	/**
-	 * prepare_wp_config function.
-	 *
+	 * Make a new wp-config and change some things
+	 * 
 	 * @access private
+	 * @param mixed $core_name
+	 * @param mixed $content_name
+	 * @param string $lang (default: "en")
+	 * @param string $switch (default: "")
 	 * @return void
 	 */
-	private function prepare_wp_config($core_name, $content_name, $switch = "") {
+	private function prepare_wp_config($core_name, $content_name, $lang = "en", $switch = "") {
+		
+		// random db prefix
 		$rnd_prefix = str_split("abcdefghijklmnopqrstuvwxyz");
 		shuffle($rnd_prefix);
 		$rnd_prefix = join(array_slice($rnd_prefix, 0, 3));
 		$wp_config = file_get_contents(__DIR__.DIRECTORY_SEPARATOR."wp-config-sample.php");
 		$wp_config = str_replace('// {{TABLE_PREFIX}}', '$table_prefix  = \''.$rnd_prefix.'_\';', $wp_config);
 
+		// add fallback security keys
 		$sec_keys = $this->get_sec_keys();
 		$wp_config = str_replace("// {{SECURITY_KEYS}}", $sec_keys, $wp_config);
+		
+		// change core and content path
 		$wp_config = str_replace("wordpress-core-dependency", $core_name, $wp_config);
 		$wp_config = str_replace("wp-content", $content_name, $wp_config);
+		
+		// add switch and WP_LANG
 		$wp_config = str_replace('// {{RUNTIME_SWITCH}}', $switch, $wp_config);
+		$wp_config = str_replace('en_EN', $lang."_".strtoupper($lang), $wp_config);
 
 		if ($this->write_to_file(__DIR__.DIRECTORY_SEPARATOR."wp-config.php", $wp_config, true)) {
 			$this->debug("Your table prefix is: " . $rnd_prefix);
@@ -398,9 +419,10 @@
 	}
 
 
+
 	/**
-	 * get_sec_keys function.
-	 *
+	 * Download a new set of security keys from the wordpress.org API
+	 * 
 	 * @access private
 	 * @return void
 	 */
@@ -419,9 +441,10 @@
 	}
 
 
+
 	/**
-	 * runtime_info function.
-	 *
+	 * Display info about the predicted runtime for our defaults of "dev", "local", "staging" and "preview"
+	 * 
 	 * @access private
 	 * @return void
 	 */
@@ -442,16 +465,21 @@
 	}
 
 
+
 	/**
-	 * create_runtimes function.
-	 *
+	 * handle the runtime config creation.
+	 * 
 	 * @access private
 	 * @param mixed $runtimes
 	 * @return void
 	 */
 	private function create_runtimes($runtimes) {
 		$this->log("Creating runtimes:");
+		
+		// load the template
 		$tmp = file_get_contents(__DIR__.DIRECTORY_SEPARATOR."wp-config-runtime-sample.php");
+		
+		// create a switch statement inline
 		$switch = "switch(true){\n";
 		$use_switch = false;
 		foreach ($runtimes as $rt_name) {
@@ -461,10 +489,13 @@
 		$runtime_env = "'.$rt_name.'";
 		break;
 	';
-			$use_switch = true;
+				$use_switch = true;
 			}
+			
 			$rt_file_content = $tmp;
 			$this->log("Creating runtime config: " . $rt_name);
+			
+			// add new security key
 			$sec_keys = $this->get_sec_keys();
 
 			$rt_file_content = str_replace("// {{SECURITY_KEYS}}", $sec_keys, $rt_file_content);
@@ -476,13 +507,14 @@
 		
 		$this->hr();;
 		
+		// return switch to main function
 		return $use_switch ? $switch : "";
 	}
 
 
 	/**
-	 * core_exists function.
-	 *
+	 * does a core already exist?
+	 * 
 	 * @access private
 	 * @param string $core_name (default: "core")
 	 * @return void
@@ -493,31 +525,59 @@
 	}
 
 
-	private function set_core_path($file, $core_name) {
+	/**
+	 * open a file, search and replace
+	 * 
+	 * @access private
+	 * @param mixed $file
+	 * @param mixed $search
+	 * @param mixed $replace
+	 * @return void
+	 */
+	private function sar_in_file($file, $search, $replace) {
 		$content = file_get_contents(__DIR__.DIRECTORY_SEPARATOR.$file);
-		$content = str_replace('/core/', '/'.$core_name.'/', $content);
+		$content = str_replace($search, $replace, $content);
 		$this->write_to_file(__DIR__.DIRECTORY_SEPARATOR.$file, $content, true);
+		
 	}
 
+
 	/**
-	 * download_core function.
-	 *
+	 * Replace default core dir
+	 * 
+	 * @access private
+	 * @param mixed $file
+	 * @param mixed $core_name
+	 * @return void
+	 */
+	private function set_core_path($file, $core_name) {
+		$this->sar_in_file($file, "/core/", "/".$core_name."/");
+	}
+
+
+
+	/**
+	 * download the Wordpress core
+	 * 
 	 * @access private
 	 * @param mixed $core_name
 	 * @param mixed $core_dest (default: __DIR__)
 	 * @return void
 	 */
 	private function download_core($core_name, $core_dest = __DIR__) {
+		
+		// we already have a core
 		if ($this->core_exists($core_name)) {
 			$this->notice("Skipping core download...");
 			$this->hr();;
 			return false;
 		}
 
+		// make tmp
 		$zip_tmp = tempnam(sys_get_temp_dir(), "zip");
 		$zip_res = fopen($zip_tmp, "w");
 
-		// Get The Zip File From Server
+		// download zip file
 		curl_setopt($this->curl, CURLOPT_URL, $this->_wp_zip_url);
 		curl_setopt($this->curl, CURLOPT_BINARYTRANSFER, true);
 		curl_setopt($this->curl, CURLOPT_FRESH_CONNECT, false);
@@ -530,25 +590,26 @@
 			$this->error("cURL: The language code is probably at fault for this...<br>".curl_error($this->curl));
 		}
 
-		/* Open the Zip file */
+		// unzip
 		$zip = new ZipArchive;
 		$this->log("Start unzipping core");
 		if ($zip->open($zip_tmp) != "true") {
 			$this->error("notice: Unable to open zip File");
 		}
-		/* Extract Zip File */
+
 		$zip->extractTo($core_dest);
 		$zip->close();
 
+		// rename core dir as wished
 		if (!rename(__DIR__.DIRECTORY_SEPARATOR."wordpress", __DIR__.DIRECTORY_SEPARATOR.$core_name)) {
 			$this->error("notice: unable to rename core folder");
 		}
 		
-		
+		// change absolute paths to new core dir
 		$this->set_core_path("index.php", $core_name);
 		$this->set_core_path("htaccess", $core_name);
 		
-		$this->hr();;
+		$this->hr();
 	}
 
 
