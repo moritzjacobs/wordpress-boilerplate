@@ -40,13 +40,6 @@ define('WP_ROOT', __DIR__."/".$core_dir);
 define('DB_CHARSET', 'utf8');
 define('DB_COLLATE', '');
 
-// ==============================================================
-// Salts, for security
-// Grab these from: https://api.wordpress.org/secret-key/1.1/salt
-// These are a fallback, re-define them in your environment wp-config.php's!
-// ==============================================================
-
-// {{SECURITY_KEYS}}
 
 // ==============================================================
 // Table prefix

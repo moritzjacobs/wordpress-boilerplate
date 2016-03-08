@@ -575,10 +575,6 @@
 		$wp_config = file_get_contents(__DIR__.DIRECTORY_SEPARATOR."wp-config-sample.php");
 		$wp_config = str_replace('// {{TABLE_PREFIX}}', '$table_prefix  = \''.$rnd_prefix.'_\';', $wp_config);
 
-		// add fallback security keys
-		$sec_keys = $this->get_sec_keys();
-		$wp_config = str_replace("// {{SECURITY_KEYS}}", $sec_keys, $wp_config);
-		
 		// change core and content path
 		$wp_config = str_replace("wordpress-core-dependency", $core_name, $wp_config);
 		$wp_config = str_replace("wp-content", $content_name, $wp_config);
