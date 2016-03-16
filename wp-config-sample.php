@@ -52,14 +52,10 @@ define('DB_COLLATE', '');
 // Language
 // Leave blank for American English
 // ================================
+
 // {{WP_LANG}}
 
 
-// ===========
-// Hide errors
-// ===========
-ini_set('display_errors', 0);
-define('WP_DEBUG_DISPLAY', false);
 
 // ===================================================
 // Load database info and local development parameters
