@@ -1,13 +1,38 @@
+# OS X
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+.Spotlight-V100
+.Trashes
+.AppleDB
+.AppleDesktop
+Network Trash Folder
+Temporary Items
+
+# WINDOWS
+.project
+.metadata
+Thumbs.db
+
+# NODE, GULP, GRUNT, SASS, JS
+node_modules
+.bower.json
+.sass-cache
+*.scssc
+.grunt
+logs
+*.log
+*.map
+
+# PROJECT SPECIFIC
 _install.php
-index.php
-wp-config-runtime-sample.php
-wp-config-sample.php
 wp-config-local.php
+core/*
 
 *.log
 sitemap.xml
 sitemap.xml.gz
-wp-config.php
 wp-content/advanced-cache.php
 wp-content/backup-db/
 wp-content/backups/
@@ -20,4 +45,3 @@ wp-content/plugins/hello.php
 
 /readme.html
 /license.txt
-

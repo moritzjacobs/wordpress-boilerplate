@@ -9,7 +9,7 @@
 	<style>
 		body {
 			color: #666;
-			padding: 0 30px;
+			padding: 20px 30px;
 			width: 700px;
 			margin: auto;
 		}
@@ -56,30 +56,17 @@
 		<?php if (empty($_POST["go"])): ?>
 
 			<h1>wordpress-boilerplate</h1>
-			
 			<p>This is a boilerplate and installation script for Wordpress with the WP core as a dependency and some other stuff.</p>
 			
-			<h3>Running the installer will…:</h3>
-			
-			<ul>
-				<li><p>download and unpack the current stable Wordpress core in your language of choice</p></li>
-				<li><p>rename the core and <code>wp-content</code> folders</p></li>
-				<li><p>set up three runtime configurations (<em>local</em>, <em>staging</em> and <em>live</em>)</p></li>
-				<li><p>change the db prefix</p></li>
-				<li><p>download fresh security keys.</p></li>
-				<li><p>migrate the language files from the core</p></li>
-			</ul>
-			
-			
 			<h2>Instructions</h2>
-			
 			<ol>
-				<li>Surf to <a href="http://&lt;your_host">http://&lt;your_host</a>/_install.php></li>
-				<li>Follow the instructions</li>
-				<li>Delete <code>_install.php</code>, <code>wp-config-runtime-sample.php</code> and <code>wp-config-sample.php</code></li>
-				<li>Double check <code>wp-config.php</code></li>
-				<li>Edit your runtime configurations</li>
+				<li>Customize settings and run installer</li>
+				<li>Then delete <code>_install.php</code>, <code>_wp-config-ENV-SAMPLE.php</code> and <code>wp-config-SAMPLE.php</code></li>
+				<li>Double check <code>wp-config.php</code> and edit your runtime configs</li>
+				<li>Continue with the usual wordpress install in <code>http://your-host/install.php</code></li>
 			</ol>
+
+			<hr>
 
 			<?php $offline = !@fopen("http://www.google.com:80/","r"); ?>
 			<?php if($offline): ?>
@@ -255,16 +242,24 @@
 						</select>
 					</div>
 					<div class="form-group">
-						<label for="core_dir">Core dir name</label>
-						<input type="text" class="form-control" value="core" name="core_dir">
+						<label for="version">Version (default: 'latest')</label>
+						<input type="text" id="version" class="form-control" value="latest" name="version" placeholder="4.4.4">
 					</div>
 					<div class="form-group">
-						<label for="content_dir">content dir (default /wp-content)</label>
-						<input type="text" class="form-control" value="wp-content" name="content_dir">
+						<label for="core_dir">Core dir name (default 'core')</label>
+						<input type="text" id="core_dir" class="form-control" value="core" name="core_dir" placeholder="use default: core">
 					</div>
 					<div class="form-group">
-						<label for="runtimes">Runtime confogurations (comma separated)</label>
-						<input type="text" class="form-control" value="local, staging, live" name="runtimes">
+						<label for="content_dir">content dir (default 'wp-content')</label>
+						<input type="text" id="content_dir" class="form-control" value="wp-content" name="content_dir" placeholder="use default: wp-content">
+					</div>
+					<div class="form-group">
+						<label for="upload_dir">upload dir (default 'wp-content/upload')</label>
+						<input type="text" id="upload_dir" class="form-control" value="" name="upload_dir" placeholder="use default: wp-content/uploads">
+					</div>
+					<div class="form-group">
+						<label for="runtimes">additional runtime environments (comma separated)</label>
+						<input type="text" class="form-control" value="" name="runtimes" placeholder="staging, preproduction">
 					</div>
 					
 					<button class="btn btn-primary" type="submit" name="go" value="go">Click here to start the installation</button>
@@ -273,13 +268,13 @@
 
 		<?php else: ?>
 			<div class="monospaced">
-				<?php $wpi = new WPInstall($_POST["lang"], $_POST["core_dir"], $_POST["content_dir"], $_POST["runtimes"]); ?>
+				<?php $wpi = new WPInstall($_POST["lang"], $_POST["core_dir"], $_POST["content_dir"], $_POST["runtimes"], $_POST["upload_dir"], $_POST["version"]); ?>
 				<hr><span style='color:red;font-weight:bold'>
 				Don't forget to delete the following files<br>
 				<ol>
 					<li><code>_install.php</code></li>
-					<li><code>wp-config-runtime-sample.php</code></li>
-					<li><code>wp-config-sample.php</code></li>
+					<li><code>_wp-config-ENV-SAMPLE.php</code></li>
+					<li><code>_wp-config-SAMPLE.php</code></li>
 				</ol>
 				
 			</div>
@@ -326,16 +321,24 @@
 	 * @param mixed local"
 	 * @return void
 	 */
-	public function __construct($lang = "en", $core_name = "core", $content_name = "wp-content", $runtimes_str = "live, staging, local") {
+	public function __construct($lang = "en", $core_name = "core", $content_name = "wp-content", $runtimes_str = "", $upload_name = '', $version = '') {
 		// Init vars
 		$this->notice_cnt = 0;
 		$this->error_cnt = 0;
 
 		// Configure download link
-		if($lang == "en") {
-			$this->_wp_zip_url = "https://wordpress.org/latest.zip";
+		if ($version == 'latest') {
+			if($lang == "en") {
+				$this->_wp_zip_url = "https://wordpress.org/latest.zip";
+			} else {
+				$this->_wp_zip_url = "https://".$lang.".wordpress.org/latest-".$lang.".zip";
+			}
 		} else {
-			$this->_wp_zip_url = "https://".$lang.".wordpress.org/latest-".$lang.".zip";
+			if($lang == "en") {
+				$this->_wp_zip_url = "https://wordpress.org/wordpress-".$version.".zip";
+			} else {
+				$this->_wp_zip_url = "https://".$lang.".wordpress.org/wordpress-".$version."-".$lang.".zip";
+			}
 		}
 		$this->debug($this->_wp_zip_url);
 		// ignore empty runtimes
@@ -344,15 +347,24 @@
 		} else {
 			$runtimes = array();
 		}
-
+		
 		$this->head("Let's go!");
-		$this->debug('language: ' .$lang.'<br>
-			core path: ' .$core_name.'<br>
-			content path: ' . $content_name.'<br>
-			runtime configs: ' . $runtimes_str.'<br>
+		if ($upload_name == $content_name.'/uploads' || $upload_name == '') { 
+			$custom_upload_dir = false;
+		} else {
+			$custom_upload_dir = true;
+		}
+		if ($core_name == '') { 		$core_name = 'core'; }
+		if ($content_name == '') { 		$content_name = 'wp-content'; }
+		if (!$custom_upload_dir) { 		$upload_name = 'wp-content/uploads'; }
+		if ($runtimes_str == '') { 		$runtimes_str = 'local, live'; }
+		else { $runtimes_str = 'local, live, ' . $runtimes_str; }
+		$this->debug('language: <code>' .$lang.'</code><br>
+			core dir: <code>' . $core_name . '</code><br>
+			content dir: <code>' . $content_name . '</code><br>
+			upload dir: <code>' . $upload_name . '</code><br>
+			runtime configs: <code>' . $runtimes_str . '</code><br>
 		');
-
-
 
 		// init cURL
 		$this->curl = curl_init();
@@ -366,32 +378,43 @@
 		// display current host runtime
 		$this->runtime_info();
 		$this->hr();
-
+		
 		// process core
 		$this->download_core($core_name);
 		
-		
 		// change absolute paths to new core dir
+		$this->log("changing index.php, .htaccess and .gitigore");
 		$this->set_core_path("index.php", $core_name);
-		$this->set_core_path("htaccess", $core_name);
+		$this->set_core_path(".htaccess", $core_name);
+		$this->sar_in_file(".gitignore", "wp-content/", $content_name."/");
 		
 		// process runtimes
 		$switch = $this->create_runtimes($runtimes);
-		
+		$this->log("Creating runtime config: local");
+		$this->set_salts('wp-config-local.php');
+		$this->log("Creating runtime config: live");
+		$this->set_salts('wp-config-live.php');
+
 		// make wp-config
-		$this->prepare_wp_config($core_name, $content_name, $lang, $switch);
-		
+		$this->prepare_wp_config($core_name, $content_name, $lang, $switch, $upload_name);
+
 		// rename wp-content
 		$rename_wp_cont = $content_name!= "wp-content" && file_exists(__DIR__.DIRECTORY_SEPARATOR."wp-content") && is_dir(__DIR__.DIRECTORY_SEPARATOR."wp-content");
 		if($rename_wp_cont) {
-			$this->debug("attempt to rename wp-content");
+			$this->log("attempt to rename wp-content");
 			if (!rename(__DIR__.DIRECTORY_SEPARATOR."wp-content", __DIR__.DIRECTORY_SEPARATOR.$content_name)) {
 				$this->error("notice: unable to rename wp-content folder");
 			}
 		}
-		
-		// prepare .gitignore
-		$this->sar_in_file("gitignore", "wp-content/", $content_name."/");
+
+		// create file in upload folder
+		if ($custom_upload_dir) {
+			$upload_dir_name = __DIR__.DIRECTORY_SEPARATOR.$upload_name;
+			if (!file_exists($upload_dir_name)) {
+			    mkdir($upload_dir_name, 0777, true);
+			}
+			$this->write_to_file($upload_dir_name.DIRECTORY_SEPARATOR."index.php", '<?php // Silence is golden.');
+		}
 		
 		// english lamguage Wordpress *has no translation files*
 		if($lang != "en") {
@@ -409,6 +432,8 @@
 
 		$this->head("Installation finished!");
 		$this->log("Go ahead and edit your runtime configs!");
+		$this->log("<hr>");
+		$this->log("<a href=\"/\" class=\"btn btn-primary\">then continue to install Wordpress</a>");
 	}
 
 
@@ -566,29 +591,33 @@
 	 * @param string $switch (default: "")
 	 * @return void
 	 */
-	private function prepare_wp_config($core_name, $content_name, $lang = "en", $switch = "") {
+	private function prepare_wp_config($core_name, $content_name, $lang = "en", $switch = "", $upload_name) {
+		$this->log("Creating wp-config");
+		// get wp-config-sample
+		$wp_config = file_get_contents(__DIR__.DIRECTORY_SEPARATOR."_wp-config-SAMPLE.php");
 		
-		// random db prefix
+		// set table prefix
 		$rnd_prefix = str_split("abcdefghijklmnopqrstuvwxyz");
 		shuffle($rnd_prefix);
 		$rnd_prefix = join(array_slice($rnd_prefix, 0, 3));
-		$wp_config = file_get_contents(__DIR__.DIRECTORY_SEPARATOR."wp-config-sample.php");
-		$wp_config = str_replace('// {{TABLE_PREFIX}}', '$table_prefix  = \''.$rnd_prefix.'_\';', $wp_config);
+		$wp_config = str_replace('{{TABLE_PREFIX}}', $rnd_prefix.'_', $wp_config);
 
 		// change core and content path
-		$wp_config = str_replace("wordpress-core-dependency", $core_name, $wp_config);
-		$wp_config = str_replace("wp-content", $content_name, $wp_config);
+		$wp_config = str_replace("{{WP_CORE_DIR}}", $core_name, $wp_config);
+		$wp_config = str_replace("{{CONTENT_DIR}}", $content_name, $wp_config);
+		$wp_config = str_replace("{{UPLOAD_DIR}}", $upload_name, $wp_config);
+		if ($upload_name != $content_name.'/uploads') {
+			$wp_config = str_replace("{{USE_UPLOAD_DIR}}", 'true', $wp_config);
+		} else {
+			$wp_config = str_replace("{{USE_UPLOAD_DIR}}", 'false', $wp_config);
+		}
 		
-		// add switch
+		// add environment runtimes switch
 		$wp_config = str_replace('// {{RUNTIME_SWITCH}}', $switch, $wp_config);
-		
-		// add WP_LANG
-		
-		$lang_code = $lang == "en" ? "" : "define('WPLANG', '".$lang."');";
-		$wp_config = str_replace('// {{WP_LANG}}', $lang_code, $wp_config);
 
+		// write file
 		if ($this->write_to_file(__DIR__.DIRECTORY_SEPARATOR."wp-config.php", $wp_config)) {
-			$this->debug("Your table prefix is: " . $rnd_prefix);
+			$this->debug("Your table prefix is: " . $rnd_prefix . "_");
 		}
 
 		$this->hr();
@@ -612,7 +641,17 @@
 			$this->error("notice: ".curl_error($this->curl));
 		}
 
+		return $sec_keys;
+	}
 
+	private function set_salts($filename) {
+		$tmp = file_get_contents($filename);
+		$rt_file_content = $tmp;
+		// add new security key
+		$sec_keys = $this->get_sec_keys();
+		$rt_file_content = preg_replace("/(define\( ?'(AUTH_KEY|SECURE_AUTH_KEY|LOGGED_IN_KEY|NONCE_KEY|AUTH_SALT|SECURE_AUTH_SALT|LOGGED_IN_SALT|NONCE_SALT)(.*\n))/", '', $rt_file_content);
+		$rt_file_content = str_replace("// {{SECURITY_KEYS}}", $sec_keys . "// {{SECURITY_KEYS}}", $rt_file_content);
+		$this->write_to_file($filename, $rt_file_content, true);
 		return $sec_keys;
 	}
 
@@ -626,18 +665,18 @@
 	 */
 	private function runtime_info() {
 		switch (true) {
-		case stristr($_SERVER['SERVER_NAME'], "dev"):
-		case stristr($_SERVER['SERVER_NAME'], "local"):
-			$current_rt = "local";
-			break;
-		case stristr($_SERVER['SERVER_NAME'], "staging"):
-		case stristr($_SERVER['SERVER_NAME'], "preview"):
-			$current_rt = "staging";
-			break;
-		default:
-			$current_rt = "live";
+			case stristr($_SERVER['SERVER_NAME'], "dev"):
+			case stristr($_SERVER['SERVER_NAME'], "local"):
+				$current_rt = "local";
+				break;
+			case stristr($_SERVER['SERVER_NAME'], "staging"):
+			case stristr($_SERVER['SERVER_NAME'], "preview"):
+				$current_rt = "staging";
+				break;
+			default:
+				$current_rt = "live";
 		}
-		$this->debug("Current default runtime is '" . $current_rt . "'");
+		$this->debug("Current runtime is '" . $current_rt . "'");
 	}
 
 
@@ -651,40 +690,32 @@
 	 */
 	private function create_runtimes($runtimes) {
 		$this->log("Creating runtimes:");
+
+		// load local runtime template
+		$tmp = file_get_contents(__DIR__.DIRECTORY_SEPARATOR."_wp-config-ENV-SAMPLE.php");
+		$rt_file_name = __DIR__.DIRECTORY_SEPARATOR."wp-config-local.php";
+		$this->write_to_file($rt_file_name, $tmp);
+
+		if (empty($runtimes) || $runtimes == '') {
+			return;
+		}
 		
-		// load the template
-		$tmp = file_get_contents(__DIR__.DIRECTORY_SEPARATOR."wp-config-runtime-sample.php");
-		
-		// create a switch statement inline
-		$switch = "switch(true){\n";
-		$use_switch = false;
+		$else = '';
 		foreach ($runtimes as $rt_name) {
-			if(!in_array($rt_name, array("local", "staging", "preview", "live"))) {
-				$switch .= '
-	case host_contains("'.$rt_name.'"):
-		$runtime_env = "'.$rt_name.'";
-		break;
-	';
-				$use_switch = true;
-			}
-			
+			// switch case for wp-config
+			$else .= "\n\t".'case host_contains("'.$rt_name.'"): '."\n\t\t".'$runtime_env = "'.$rt_name.'"; '."\n\t\t".'break; ';
+
+			// create wp-config-runtime
 			$rt_file_content = $tmp;
 			$this->log("Creating runtime config: " . $rt_name);
-			
-			// add new security key
-			$sec_keys = $this->get_sec_keys();
-
-			$rt_file_content = str_replace("// {{SECURITY_KEYS}}", $sec_keys, $rt_file_content);
-			$rt_file_content = str_replace("{{RT_NAME}}", $rt_name, $rt_file_content);
+			// replace strings and write file
+			$rt_file_content = str_replace("// {{SECURITY_KEYS}}", $this->get_sec_keys()."// {{SECURITY_KEYS}}", $rt_file_content);
+			$rt_file_content = str_replace("local_", $rt_name.'_', $rt_file_content);
 			$rt_file_name = __DIR__.DIRECTORY_SEPARATOR."wp-config-".$rt_name.".php";
 			$this->write_to_file($rt_file_name, $rt_file_content);
 		}
-		$switch .= "\n}";
 		
-		$this->hr();
-		
-		// return switch to main function
-		return $use_switch ? $switch : "";
+		return $else;
 	}
 
 
@@ -727,7 +758,7 @@
 	 * @return void
 	 */
 	private function set_core_path($file, $core_name) {
-		$this->sar_in_file($file, "/core/", "/".$core_name."/");
+		$this->sar_in_file($file, "core/", $core_name."/");
 	}
 
 
@@ -744,7 +775,7 @@
 		
 		// we already have a core
 		if ($this->core_exists($core_name)) {
-			$this->notice("Skipping core download...");
+			$this->notice("Skipping core download, Wordpress already exists...");
 			$this->hr();
 			return false;
 		}

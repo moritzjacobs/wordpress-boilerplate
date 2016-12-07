@@ -1,0 +1,24 @@
+{
+    "name": "wp-init",
+    "version": "1.2.1",
+    "homepage": "https://bitbucket.org/neonpastell/wp-init",
+    "authors": [
+        "Moritz Jacobs <mail@moritzjacobs.de>",
+        "Manuel Piepereit <manuel.piepereit@neonpastell.de>"
+    ],
+    "description": "This is a boilerplate and installation script for Wordpress with the WP core as a dependency and some other stuff. ",
+    "keywords": [
+        "wordpress"
+    ],
+    "main": [
+        "_install.php"
+    ],
+    "ignore": [
+        "**/.*",
+        "node_modules",
+        "bower_components",
+        "test",
+        "tests",
+        "bower.json"
+    ]
+}
