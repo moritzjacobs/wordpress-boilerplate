@@ -6,55 +6,10 @@ require_once './lib/WPInstall.php'
 <html>
 	<head>
 		<meta http-equiv="Content-type" content="text/html; charset=utf-8">
-		<link rel="stylesheet" href="public/css/styles.css" type="text/css" media="screen">
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+		<link rel="stylesheet" href="./styles/style.css" type="text/css" media="screen">
 		<title>Install Wordpress</title>
 	</head>
-	<style>
-		body {
-			color: #666;
-			padding: 20px 30px;
-			width: 700px;
-			margin: auto;
-		}
-		
-		.form-control {
-			max-width: 250px;
-		}
-		
-		.spinner {
-			display: block;
-		}
-		
-		@-moz-keyframes spinner { 100% { -moz-transform: rotate(360deg); } }
-		@-webkit-keyframes spinner { 100% { -webkit-transform: rotate(360deg); } }
-		@keyframes spinner { 100% { -webkit-transform: rotate(360deg); transform:rotate(360deg); } }
-		
-		.spinner:after {
-			display: none;
-			margin-left: 10px;
-			content: "\27F3";
-			-webkit-animation: spinner 1s linear infinite;
-			-moz-animation: spinner 1s linear infinite;
-			animation: spinner 1s linear infinite;
-			color: #aaa;
-			font-size: 1.5em;
-		}
-		
-		.spinner:last-child:after {
-			display: inline-block;
-		}
-		
-		.monospaced {
-			font-family: monospace;
-			margin-top: 50px;
-		}
-
-		input[type=submit] {
-			width:
-		}
-
-	</style>
 	<body>
 
 		<?php if (empty($_POST["go"])): ?>
