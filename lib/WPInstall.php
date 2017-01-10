@@ -51,8 +51,8 @@
 
 		$this->head("Let's go!");
 
-		if ($core_name == '') { 		$core_name = 'core'; }
-		if ($content_name == '') { 		$content_name = 'wp-content'; }
+		$core_name = $core_name == '' ? 'core' : $core_name;
+		$content_name = $content_name == '' ? 'wp-content' : $content_name;
 		$custom_upload_dir = !($upload_name == $content_name.'/uploads' || $upload_name == '');
 		$upload_name = $custom_upload_dir ? $upload_name : 'wp-content/uploads';
 
