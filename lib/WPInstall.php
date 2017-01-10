@@ -46,12 +46,10 @@
 		$this->debug($this->_wp_zip_url);
 
 		// ignore empty runtimes
-		if(!empty($runtimes_str)) {
-			$runtimes = array_map('trim', explode(",",$runtimes_str));
-		} else {
-			$runtimes = array();
-		}
-		
+		$runtimes = !empty($runtimes_str) ?
+			array_map('trim', explode(",",$runtimes_str))
+			: array();
+
 		$this->head("Let's go!");
 		if ($upload_name == $content_name.'/uploads' || $upload_name == '') { 
 			$custom_upload_dir = false;
