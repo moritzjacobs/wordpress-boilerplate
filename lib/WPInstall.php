@@ -1,14 +1,14 @@
 <?php
-	/**
-	 * This is a boilerplate and installation script for Wordpress with the WP core as a dependency and some other stuff.
-	 *
-	 * See https://github.com/moritzjacobs/wordpress-boilerplate for more documentation
-	 *
-	 * @author     Moritz Jacobs
-	 * @link       https://github.com/moritzjacobs/wordpress-boilerplate
-	 */
- 
-	class WPInstall {
+/**
+ * This is a boilerplate and installation script for Wordpress with the WP core as a dependency and some other stuff.
+ *
+ * See https://github.com/moritzjacobs/wordpress-boilerplate for more documentation
+ *
+ * @author     Moritz Jacobs
+ * @link       https://github.com/moritzjacobs/wordpress-boilerplate
+ */
+class WPInstall {
+
 
 	/**
 	 * Wordpress.org API for retreiving fresh security keys
@@ -20,6 +20,7 @@
 	 */
 	private $_sec_api_url = "https://api.wordpress.org/secret-key/1.1/salt/";
 
+	const RootDir = __DIR__.DIRECTORY_SEPARATOR."..";
 
 	/**
 	 * Main function for processing the installation
@@ -42,8 +43,8 @@
 		$baseName = $version == 'latest' ? 'latest' : "wordpress-{$version}";
 		$langExtension = $lang == 'en' ? '' : "-${lang}";
 		$subdomain = $lang == 'en' ? '' : "${lang}.";
-		$this->_wp_zip_url = "https://${subdomain}.wordpress.org/${baseName}${langExtension}.zip";
-		$this->debug($this->_wp_zip_url);
+		$wp_zip_url = "https://${subdomain}wordpress.org/${baseName}${langExtension}.zip";
+		$this->debug($wp_zip_url);
 
 		$runtimes = array_map('trim',
 		                      explode(",",
@@ -74,9 +75,11 @@
 		// display current host runtime
 		$this->runtime_info();
 		$this->hr();
-		
+
+		$destDir = WPInstall::RootDir.DIRECTORY_SEPARATOR.'wordpress';
+
 		// process core
-		$this->download_core($core_name);
+		$this->download_core($wp_zip_url, $core_name, $destDir);
 		
 		// change absolute paths to new core dir
 		$this->log("changing index.php, .htaccess and .gitigore");
@@ -114,7 +117,7 @@
 		
 		// english lamguage Wordpress *has no translation files*
 		if($lang != "en") {
-			$this->copy_languages($core_name, $content_name);
+			$this->copy_languages($destDir, $core_name, $content_name);
 		}
 		curl_close($this->curl);
 
@@ -241,9 +244,9 @@
 	 * @param mixed $content_name
 	 * @return void
 	 */
-	private function copy_languages($core_name, $content_name) {
+	private function copy_languages($downloadsDir, $core_name, $content_name) {
 		// Is there already a core?
-		if ($this->core_exists($core_name)) {
+		if ($this->core_exists($downloadsDir, $core_name)) {
 			$source = __DIR__.DIRECTORY_SEPARATOR.$core_name.DIRECTORY_SEPARATOR."wp-content/languages";
 			$dest = __DIR__.DIRECTORY_SEPARATOR.$content_name.DIRECTORY_SEPARATOR."languages";
 
@@ -335,6 +338,7 @@
 
 		if (!$sec_keys) {
 			$this->error("notice: ".curl_error($this->curl));
+			die();
 		}
 
 		return $sec_keys;
@@ -376,7 +380,6 @@
 	}
 
 
-
 	/**
 	 * handle the runtime config creation.
 	 * 
@@ -414,19 +417,17 @@
 		return $else;
 	}
 
-
 	/**
 	 * does a core already exist?
-	 * 
+	 *
 	 * @access private
-	 * @param string $core_name (default: "core")
+	 * @param string $downloadsDir
+	 * @param string $core_name
 	 * @return void
 	 */
-	private function core_exists($core_name = "core") {
-		$core_dir = __DIR__.DIRECTORY_SEPARATOR.$core_name;
-		return file_exists($core_dir.DIRECTORY_SEPARATOR."wp-includes");
+	private function core_exists($downloadsDir, $core_name) {
+		return file_exists($downloadsDir.DIRECTORY_SEPARATOR.$core_name.DIRECTORY_SEPARATOR."wp_includes");
 	}
-
 
 	/**
 	 * open a file, search and replace
@@ -463,14 +464,17 @@
 	 * download the Wordpress core
 	 * 
 	 * @access private
-	 * @param mixed $core_name
-	 * @param mixed $core_dest (default: __DIR__)
+	 * @param string $url
+	 * @param string $core_name
+	 * @param string $destDir
 	 * @return void
 	 */
-	private function download_core($core_name, $core_dest = __DIR__) {
-		
+	private function download_core($url, $core_name, $destDir) {
+		$wordpressDir = $destDir.DIRECTORY_SEPARATOR.$core_name;
+
 		// we already have a core
-		if ($this->core_exists($core_name)) {
+		if ($this->core_exists($destDir, $core_name)) {
+			// TODO how and when will this cache be invalidated
 			$this->notice("Skipping core download, Wordpress already exists...");
 			$this->hr();
 			return false;
@@ -481,16 +485,17 @@
 		$zip_res = fopen($zip_tmp, "w");
 
 		// download zip file
-		curl_setopt($this->curl, CURLOPT_URL, $this->_wp_zip_url);
+		curl_setopt($this->curl, CURLOPT_URL, $url);
 		curl_setopt($this->curl, CURLOPT_BINARYTRANSFER, true);
 		curl_setopt($this->curl, CURLOPT_FRESH_CONNECT, false);
 		curl_setopt($this->curl, CURLOPT_SSL_VERIFYPEER, 0);
 		curl_setopt($this->curl, CURLOPT_FILE, $zip_res);
 
-		$this->log("Start download from ". $this->_wp_zip_url);
+		$this->log("Start download from ". $url);
 
 		if (!curl_exec($this->curl)) {
 			$this->error("cURL: The language code is probably at fault for this...<br>".curl_error($this->curl));
+			die();
 		}
 
 		// unzip
@@ -500,11 +505,11 @@
 			$this->error("notice: Unable to open zip File");
 		}
 
-		$zip->extractTo($core_dest);
+		$zip->extractTo($destDir);
 		$zip->close();
 
 		// rename core dir as wished
-		if (!rename(__DIR__.DIRECTORY_SEPARATOR."wordpress", __DIR__.DIRECTORY_SEPARATOR.$core_name)) {
+		if (!rename($destDir.DIRECTORY_SEPARATOR."wordpress", $wordpressDir)) {
 			$this->error("notice: unable to rename core folder");
 		}
 		
