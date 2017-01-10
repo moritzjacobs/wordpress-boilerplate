@@ -51,10 +51,11 @@
 
 		$this->head("Let's go!");
 
-		$custom_upload_dir = !($upload_name == $content_name.'/uploads' || $upload_name == '');
 		if ($core_name == '') { 		$core_name = 'core'; }
 		if ($content_name == '') { 		$content_name = 'wp-content'; }
-		if (!$custom_upload_dir) { 		$upload_name = 'wp-content/uploads'; }
+		$custom_upload_dir = !($upload_name == $content_name.'/uploads' || $upload_name == '');
+		$upload_name = $custom_upload_dir ? $upload_name : 'wp-content/uploads';
+
 		$this->debug('language: <code>' .$lang.'</code><br>
 			core dir: <code>' . $core_name . '</code><br>
 			content dir: <code>' . $content_name . '</code><br>
