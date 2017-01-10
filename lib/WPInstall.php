@@ -50,11 +50,8 @@
 		                              $runtimes_str == '' ? 'local, live' : 'local, live, ' . $runtimes_str));
 
 		$this->head("Let's go!");
-		if ($upload_name == $content_name.'/uploads' || $upload_name == '') { 
-			$custom_upload_dir = false;
-		} else {
-			$custom_upload_dir = true;
-		}
+
+		$custom_upload_dir = !($upload_name == $content_name.'/uploads' || $upload_name == '');
 		if ($core_name == '') { 		$core_name = 'core'; }
 		if ($content_name == '') { 		$content_name = 'wp-content'; }
 		if (!$custom_upload_dir) { 		$upload_name = 'wp-content/uploads'; }
