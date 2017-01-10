@@ -39,20 +39,12 @@
 		$this->error_cnt = 0;
 
 		// Configure download link
-		if ($version == 'latest') {
-			if($lang == "en") {
-				$this->_wp_zip_url = "https://wordpress.org/latest.zip";
-			} else {
-				$this->_wp_zip_url = "https://".$lang.".wordpress.org/latest-".$lang.".zip";
-			}
-		} else {
-			if($lang == "en") {
-				$this->_wp_zip_url = "https://wordpress.org/wordpress-".$version.".zip";
-			} else {
-				$this->_wp_zip_url = "https://".$lang.".wordpress.org/wordpress-".$version."-".$lang.".zip";
-			}
-		}
+		$baseName = $version == 'latest' ? 'latest' : "wordpress-{$version}";
+		$langExtension = $lang == 'en' ? '' : "-${lang}";
+		$subdomain = $lang == 'en' ? '' : "${lang}.";
+		$this->_wp_zip_url = "https://${subdomain}.wordpress.org/${baseName}${langExtension}.zip";
 		$this->debug($this->_wp_zip_url);
+
 		// ignore empty runtimes
 		if(!empty($runtimes_str)) {
 			$runtimes = array_map('trim', explode(",",$runtimes_str));
