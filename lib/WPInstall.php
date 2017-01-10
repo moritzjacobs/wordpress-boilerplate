@@ -48,9 +48,6 @@
 		$runtimes = array_map('trim',
 		                      explode(",",
 		                              $runtimes_str == '' ? 'local, live' : 'local, live, ' . $runtimes_str));
-
-		$this->head("Let's go!");
-
 		$core_name = $core_name == '' ? 'core' : $core_name;
 		$content_name = $content_name == '' ? 'wp-content' : $content_name;
 		$custom_upload_dir = !($upload_name == $content_name.'/uploads' || $upload_name == '');
@@ -62,6 +59,8 @@
 			upload dir: <code>' . $upload_name . '</code><br>
 			runtime configs: <code>' . $runtimes_str . '</code><br>
 		');
+
+		$this->head("Let's go!");
 
 		// init cURL
 		$this->curl = curl_init();
