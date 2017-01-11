@@ -34,11 +34,8 @@ define( 'DB_COLLATE', 'utf8_general_ci' );
 //define( 'CUSTOM_USER_TABLE',      $table_prefix . 'accounts' );
 //define( 'CUSTOM_USER_META_TABLE', $table_prefix . 'accountsmeta' );
 
-
-
 /* WordPress debug mode */
-// For debuggin in live environments add the url param: ?wp_debug=true
-if ( WP_DEBUG || defined('WP_LOCAL_DEV') || (isset($_GET['wp_debug']) && $_GET['wp_debug'] === 'true')) {
+if ( WP_DEBUG || WP_LOCAL_DEV) {
 	@ini_set( 'log_errors', 	'On' );
 	@ini_set( 'display_errors', 'On' );
 	define( 'WP_DEBUG_LOG', 	true );
