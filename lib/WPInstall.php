@@ -226,7 +226,7 @@ class WPInstall {
 
 		if (!is_dir($wpContentDir)) {
 			$this->log("attempt to copy wp-content to ${wpContentDir}");
-			self::copy_tree(self::RootDir.DIRECTORY_SEPARATOR.'wp-content', $wpContentDir);
+			self::copy_tree(self::RootDir.DIRECTORY_SEPARATOR.'templates/wp-content', $wpContentDir);
 		}
 		else {
 			$this->notice("wp-content dir '${wpContentDir}' already exists");
