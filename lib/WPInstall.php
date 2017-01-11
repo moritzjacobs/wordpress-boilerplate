@@ -231,15 +231,16 @@ class WPInstall {
 	 * Migrate translation files from the core
 	 * 
 	 * @access private
-	 * @param mixed $core_name
-	 * @param mixed $content_name
+	 * @param string $destDir
+	 * @param string $core_name
+	 * @param string $content_name
 	 * @return void
 	 */
-	private function copy_languages($downloadsDir, $core_name, $content_name) {
+	private function copy_languages($destDir, $core_name, $content_name) {
 		// Is there already a core?
-		if ($this->core_exists($downloadsDir, $core_name)) {
-			$source = __DIR__.DIRECTORY_SEPARATOR.$core_name.DIRECTORY_SEPARATOR."wp-content/languages";
-			$dest = __DIR__.DIRECTORY_SEPARATOR.$content_name.DIRECTORY_SEPARATOR."languages";
+		if ($this->core_exists($destDir, $core_name)) {
+			$source = $destDir.DIRECTORY_SEPARATOR.$core_name.DIRECTORY_SEPARATOR."wp-content/languages";
+			$dest = $destDir.DIRECTORY_SEPARATOR.$content_name.DIRECTORY_SEPARATOR."languages";
 
 			if (file_exists($dest)) {
 				$this->notice("Skipping languages...");
