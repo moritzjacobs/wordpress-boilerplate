@@ -102,13 +102,7 @@ class WPInstall {
 		$this->copy_wp_content($destDir, $content_name);
 
 		// create file in upload folder
-		if ($custom_upload_dir) {
-			$upload_dir_name = __DIR__.DIRECTORY_SEPARATOR.$upload_name;
-			if (!file_exists($upload_dir_name)) {
-			    mkdir($upload_dir_name, 0777, true);
-			}
-			$this->write_to_file($upload_dir_name.DIRECTORY_SEPARATOR."index.php", '<?php // Silence is golden.');
-		}
+		$this->create_upload_dir($destDir, $upload_name);
 		
 		// english language Wordpress *has no translation files*
 		if($lang != "en") {
@@ -233,6 +227,17 @@ class WPInstall {
 		}
 	}
 
+	private function create_upload_dir($destDir, $upload_name) {
+		$upload_dir_name = $destDir.DIRECTORY_SEPARATOR.$upload_name;
+		if (!file_exists($upload_dir_name)) {
+			// TODO review permissions
+			mkdir($upload_dir_name, 0777, true);
+		}
+		$indexFile = $upload_dir_name.DIRECTORY_SEPARATOR."index.php";
+		if (!file_exists($indexFile)) {
+			$this->write_to_file($indexFile, '<?php // Silence is golden.');
+		}
+	}
 	/**
 	 * Migrate translation files from the core
 	 * 
