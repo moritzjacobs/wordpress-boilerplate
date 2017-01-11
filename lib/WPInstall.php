@@ -72,15 +72,25 @@ class WPInstall {
 		$this->hr();
 
 		$destDir = WPInstall::RootDir.DIRECTORY_SEPARATOR.'wordpress';
+		$templateDir = WPInstall::RootDir.DIRECTORY_SEPARATOR.'templates';
 
 		// process core
 		$this->download_core($wp_zip_url, $core_name, $destDir);
 		
 		// change absolute paths to new core dir
 		$this->log("changing index.php, .htaccess and .gitignore");
-		$this->set_core_path("index.php", $core_name);
-		$this->set_core_path(".htaccess", $core_name);
-		$this->sar_in_file(".gitignore", "wp-content/", $content_name."/");
+		$this->sar_in_file($templateDir.DIRECTORY_SEPARATOR."index.php",
+		                   $destDir.DIRECTORY_SEPARATOR."index.php",
+		                   "core/",
+		                   $core_name."/");
+		$this->sar_in_file($templateDir.DIRECTORY_SEPARATOR.".htaccess",
+		                   $destDir.DIRECTORY_SEPARATOR.".htaccess",
+		                   "core/",
+		                   $core_name."/");
+		$this->sar_in_file($templateDir.DIRECTORY_SEPARATOR."gitignore",
+		                   $destDir.DIRECTORY_SEPARATOR.".gitignore",
+		                   "wp-content/",
+		                   $content_name."/");
 		
 		// process runtimes
 		$switch = $this->create_runtimes($runtimes);
@@ -410,28 +420,16 @@ class WPInstall {
 	 * open a file, search and replace
 	 * 
 	 * @access private
-	 * @param mixed $file
-	 * @param mixed $search
-	 * @param mixed $replace
+	 * @param string $src       Source file
+	 * @param string $dest      Destionation file
+	 * @param string $search
+	 * @param string $replace
 	 * @return void
 	 */
-	private function sar_in_file($file, $search, $replace) {
-		$content = file_get_contents(__DIR__.DIRECTORY_SEPARATOR.$file);
-		$content = str_replace($search, $replace, $content);
-		$this->write_to_file(__DIR__.DIRECTORY_SEPARATOR.$file, $content, true);
-		
-	}
-
-	/**
-	 * Replace default core dir
-	 * 
-	 * @access private
-	 * @param mixed $file
-	 * @param mixed $core_name
-	 * @return void
-	 */
-	private function set_core_path($file, $core_name) {
-		$this->sar_in_file($file, "core/", $core_name."/");
+	private function sar_in_file($src, $dest, $search, $replace) {
+		$this->write_to_file($dest,
+		                     str_replace($search, $replace, file_get_contents($src)),
+		                     true);
 	}
 
 	/**
