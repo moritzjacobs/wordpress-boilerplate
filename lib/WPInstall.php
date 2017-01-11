@@ -250,21 +250,8 @@ class WPInstall {
 				$this->notice("Core has no translation files");
 				return;
 			}
-			
-			// recursive copy
-			mkdir($dest, 0755);
-			foreach (
-				$iterator = new \RecursiveIteratorIterator(
-					new \RecursiveDirectoryIterator($source, \RecursiveDirectoryIterator::SKIP_DOTS),
-					\RecursiveIteratorIterator::SELF_FIRST) as $item
-			) {
-				if ($item->isDir()) {
-					/* @var RecursiveDirectoryIterator $iterator */
-					mkdir($dest . DIRECTORY_SEPARATOR . $iterator->getSubPathName());
-				} else {
-					copy($item, $dest . DIRECTORY_SEPARATOR . $iterator->getSubPathName());
-				}
-			}
+
+			self::copy_tree($source, $dest);
 		} else {
 			$this->notice("Can't find translation files?");
 		}
@@ -468,5 +455,30 @@ class WPInstall {
 		}
 		
 		$this->hr();
+	}
+
+	/**
+	 * Copy files recursively
+	 *
+	 * Likely based on http://stackoverflow.com/questions/5707806/recursive-copy-of-directory
+	 *
+	 * @param string $source
+	 * @param string $dest
+	 */
+	static private function copy_tree($source, $dest) {
+		mkdir($dest, 0755);
+		foreach (
+			$iterator = new \RecursiveIteratorIterator(
+				new \RecursiveDirectoryIterator($source, \RecursiveDirectoryIterator::SKIP_DOTS),
+				\RecursiveIteratorIterator::SELF_FIRST) as $item
+		) {
+			if ($item->isDir()) {
+				/* @var RecursiveDirectoryIterator $iterator */
+				mkdir($dest . DIRECTORY_SEPARATOR . $iterator->getSubPathName());
+			}
+			else {
+				copy($item, $dest . DIRECTORY_SEPARATOR . $iterator->getSubPathName());
+			}
+		}
 	}
 }
