@@ -1,8 +1,4 @@
 <?php
-
-/* MySQL database table prefix */
-$table_prefix  = '{{TABLE_PREFIX}}';
-
 /* Custom Content Directory (change if renamed) */
 $wp_core_dir   = "{{WP_CORE_DIR}}"; /* WP_CORE_DIR */
 $content_dir   = "{{CONTENT_DIR}}"; /* CONTENT_DIR */

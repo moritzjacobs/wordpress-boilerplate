@@ -284,12 +284,6 @@ class WPInstall {
 		// get wp-config-sample
 		$wp_config = file_get_contents(WPInstall::RootDir.DIRECTORY_SEPARATOR."_wp-config-SAMPLE.php");
 		
-		// set table prefix
-		$rnd_prefix = str_split("abcdefghijklmnopqrstuvwxyz");
-		shuffle($rnd_prefix);
-		$rnd_prefix = join('', array_slice($rnd_prefix, 0, 3));
-		$wp_config = str_replace('{{TABLE_PREFIX}}', $rnd_prefix.'_', $wp_config);
-
 		// change core and content path
 		$wp_config = str_replace("{{WP_CORE_DIR}}", $core_name, $wp_config);
 		$wp_config = str_replace("{{CONTENT_DIR}}", $content_name, $wp_config);
@@ -304,9 +298,7 @@ class WPInstall {
 		$wp_config = str_replace('// {{RUNTIME_SWITCH}}', $switch, $wp_config);
 
 		// write file
-		if ($this->write_to_file($destDir.DIRECTORY_SEPARATOR."wp-config.php", $wp_config)) {
-			$this->debug("Your table prefix is: " . $rnd_prefix . "_");
-		}
+		$this->write_to_file($destDir.DIRECTORY_SEPARATOR."wp-config.php", $wp_config);
 
 		$this->hr();
 	}
@@ -354,6 +346,15 @@ class WPInstall {
 	}
 
 	/**
+	 * @return string
+	 */
+	static private function create_table_prefix() {
+		$rnd_prefix = str_split("abcdefghijklmnopqrstuvwxyz");
+		shuffle($rnd_prefix);
+		return join('', array_slice($rnd_prefix, 0, 3));
+	}
+
+	/**
 	 * handle the runtime config creation.
 	 * 
 	 * @access private
@@ -376,6 +377,7 @@ class WPInstall {
 			// replace strings and write file
 			$rt_file_content = str_replace("// {{SECURITY_KEYS}}", $this->get_sec_keys(), $template);
 			$rt_file_content = str_replace("local_", $rt_name.'_', $rt_file_content);
+			$rt_file_content = str_replace('{{TABLE_PREFIX}}', WPInstall::create_table_prefix().'_', $rt_file_content);
 
 			$this->write_to_file($destDir.DIRECTORY_SEPARATOR."wp-config-".$rt_name.".php",
 			                     $rt_file_content);
