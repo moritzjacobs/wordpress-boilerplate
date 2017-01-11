@@ -93,11 +93,7 @@ class WPInstall {
 		                   $content_name."/");
 		
 		// process runtimes
-		$switch = $this->create_runtimes($runtimes);
-		$this->log("Creating runtime config: local");
-		$this->set_salts('wp-config-local.php');
-		$this->log("Creating runtime config: live");
-		$this->set_salts('wp-config-live.php');
+		$switch = $this->create_runtimes($destDir, $runtimes);
 
 		// make wp-config
 		$this->prepare_wp_config($core_name, $content_name, $lang, $switch, $upload_name);
@@ -318,7 +314,7 @@ class WPInstall {
 	 * Download a new set of security keys from the wordpress.org API
 	 * 
 	 * @access private
-	 * @return bool
+	 * @return string
 	 */
 	private function get_sec_keys() {
 		curl_setopt($this->curl, CURLOPT_FRESH_CONNECT, true);
@@ -331,17 +327,6 @@ class WPInstall {
 			die();
 		}
 
-		return $sec_keys;
-	}
-
-	private function set_salts($filename) {
-		$tmp = file_get_contents($filename);
-		$rt_file_content = $tmp;
-		// add new security key
-		$sec_keys = $this->get_sec_keys();
-		$rt_file_content = preg_replace("/(define\( ?'(AUTH_KEY|SECURE_AUTH_KEY|LOGGED_IN_KEY|NONCE_KEY|AUTH_SALT|SECURE_AUTH_SALT|LOGGED_IN_SALT|NONCE_SALT)(.*\n))/", '', $rt_file_content);
-		$rt_file_content = str_replace("// {{SECURITY_KEYS}}", $sec_keys . "// {{SECURITY_KEYS}}", $rt_file_content);
-		$this->write_to_file($filename, $rt_file_content, true);
 		return $sec_keys;
 	}
 
@@ -371,34 +356,28 @@ class WPInstall {
 	 * handle the runtime config creation.
 	 * 
 	 * @access private
-	 * @param mixed $runtimes
+	 * @param string $destDir
+	 * @param array $runtimes
 	 * @return string
 	 */
-	private function create_runtimes($runtimes) {
+	private function create_runtimes($destDir, $runtimes) {
 		$this->log("Creating runtimes:");
-
 		// load local runtime template
-		$tmp = file_get_contents(__DIR__.DIRECTORY_SEPARATOR."_wp-config-ENV-SAMPLE.php");
-		$rt_file_name = __DIR__.DIRECTORY_SEPARATOR."wp-config-local.php";
-		$this->write_to_file($rt_file_name, $tmp);
+		$template = file_get_contents(WPInstall::RootDir.DIRECTORY_SEPARATOR."_wp-config-ENV-SAMPLE.php");
 
-		if (empty($runtimes) || $runtimes == '') {
-			return '';
-		}
-		
 		$else = '';
 		foreach ($runtimes as $rt_name) {
 			// switch case for wp-config
 			$else .= "\n\t".'case host_contains("'.$rt_name.'"): '."\n\t\t".'$runtime_env = "'.$rt_name.'"; '."\n\t\t".'break; ';
 
 			// create wp-config-runtime
-			$rt_file_content = $tmp;
 			$this->log("Creating runtime config: " . $rt_name);
 			// replace strings and write file
-			$rt_file_content = str_replace("// {{SECURITY_KEYS}}", $this->get_sec_keys()."// {{SECURITY_KEYS}}", $rt_file_content);
+			$rt_file_content = str_replace("// {{SECURITY_KEYS}}", $this->get_sec_keys(), $template);
 			$rt_file_content = str_replace("local_", $rt_name.'_', $rt_file_content);
-			$rt_file_name = __DIR__.DIRECTORY_SEPARATOR."wp-config-".$rt_name.".php";
-			$this->write_to_file($rt_file_name, $rt_file_content);
+
+			$this->write_to_file($destDir.DIRECTORY_SEPARATOR."wp-config-".$rt_name.".php",
+			                     $rt_file_content);
 		}
 		
 		return $else;
