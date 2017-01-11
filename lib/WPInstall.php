@@ -98,14 +98,8 @@ class WPInstall {
 		// make wp-config
 		$this->prepare_wp_config($destDir, $core_name, $content_name, $switch, $upload_name);
 
-		// rename wp-content
-		$rename_wp_cont = $content_name!= "wp-content" && file_exists(__DIR__.DIRECTORY_SEPARATOR."wp-content") && is_dir(__DIR__.DIRECTORY_SEPARATOR."wp-content");
-		if($rename_wp_cont) {
-			$this->log("attempt to rename wp-content");
-			if (!rename(__DIR__.DIRECTORY_SEPARATOR."wp-content", __DIR__.DIRECTORY_SEPARATOR.$content_name)) {
-				$this->error("notice: unable to rename wp-content folder");
-			}
-		}
+		// copy wp-content
+		$this->copy_wp_content($destDir, $content_name);
 
 		// create file in upload folder
 		if ($custom_upload_dir) {
@@ -225,6 +219,18 @@ class WPInstall {
 			return false;
 		}
 		return is_int(file_put_contents($file, $content));
+	}
+
+	private function copy_wp_content($destDir, $content_name) {
+		$wpContentDir = $destDir.DIRECTORY_SEPARATOR.$content_name;
+
+		if (!is_dir($wpContentDir)) {
+			$this->log("attempt to copy wp-content to ${wpContentDir}");
+			self::copy_tree(self::RootDir.DIRECTORY_SEPARATOR.'wp-content', $wpContentDir);
+		}
+		else {
+			$this->notice("wp-content dir '${wpContentDir}' already exists");
+		}
 	}
 
 	/**
