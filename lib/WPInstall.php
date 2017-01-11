@@ -27,13 +27,6 @@ class WPInstall {
 		$this->notice_cnt = 0;
 		$this->error_cnt = 0;
 
-		// Configure download link
-		$baseName = $version == 'latest' ? 'latest' : "wordpress-{$version}";
-		$langExtension = $lang == 'en' ? '' : "-${lang}";
-		$subdomain = $lang == 'en' ? '' : "${lang}.";
-		$wp_zip_url = "https://${subdomain}wordpress.org/${baseName}${langExtension}.zip";
-		$this->debug($wp_zip_url);
-
 		$runtimes = array_map('trim',
 		                      explode(",",
 		                              $runtimes_str == '' ? 'local, live' : 'local, live, ' . $runtimes_str));
@@ -68,7 +61,8 @@ class WPInstall {
 		$templateDir = WPInstall::RootDir.DIRECTORY_SEPARATOR.'templates';
 
 		// process core
-		$this->download_core($wp_zip_url, $core_name, $destDir);
+		$this->debug("Download from ". self::wp_download_url($version, $lang));
+		$this->download_core(self::wp_download_url($version, $lang), $core_name, $destDir);
 		
 		// change absolute paths to new core dir
 		$this->log("changing index.php, .htaccess and .gitignore");
@@ -115,6 +109,13 @@ class WPInstall {
 		$this->log("Go ahead and edit your runtime configs!");
 		$this->log("<hr>");
 		$this->log("<a href=\"/\" class=\"btn btn-primary\">then continue to install Wordpress</a>");
+	}
+
+	static private function wp_download_url($version, $lang) {
+		$baseName = $version == 'latest' ? 'latest' : "wordpress-{$version}";
+		$langExtension = $lang == 'en' ? '' : "-${lang}";
+		$subdomain = $lang == 'en' ? '' : "${lang}.";
+		return "https://${subdomain}wordpress.org/${baseName}${langExtension}.zip";
 	}
 
 	/**
