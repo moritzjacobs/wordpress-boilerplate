@@ -8,15 +8,8 @@
  * @link       https://github.com/moritzjacobs/wordpress-boilerplate
  */
 class WPInstall {
-	/**
-	 * Wordpress.org API for retreiving fresh security keys
-	 *
-	 * (default value: "https://api.wordpress.org/secret-key/1.1/salt/")
-	 *
-	 * @var string
-	 * @access private
-	 */
-	private $_sec_api_url = "https://api.wordpress.org/secret-key/1.1/salt/";
+	/** Wordpress.org API for retreiving fresh security keys */
+	const SecApiUrl = "https://api.wordpress.org/secret-key/1.1/salt/";
 
 	const RootDir = __DIR__.DIRECTORY_SEPARATOR."..";
 
@@ -309,7 +302,7 @@ class WPInstall {
 	 */
 	private function get_sec_keys() {
 		curl_setopt($this->curl, CURLOPT_FRESH_CONNECT, true);
-		curl_setopt($this->curl, CURLOPT_URL, $this->_sec_api_url);
+		curl_setopt($this->curl, CURLOPT_URL, self::SecApiUrl);
 		curl_setopt($this->curl, CURLOPT_RETURNTRANSFER, 1);
 		$sec_keys = curl_exec($this->curl);
 
