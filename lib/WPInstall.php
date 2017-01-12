@@ -96,7 +96,7 @@ class WPInstall {
 		$switch = $this->create_runtimes($destDir, $runtimes);
 
 		// make wp-config
-		$this->prepare_wp_config($core_name, $content_name, $lang, $switch, $upload_name);
+		$this->prepare_wp_config($destDir, $core_name, $content_name, $switch, $upload_name);
 
 		// rename wp-content
 		$rename_wp_cont = $content_name!= "wp-content" && file_exists(__DIR__.DIRECTORY_SEPARATOR."wp-content") && is_dir(__DIR__.DIRECTORY_SEPARATOR."wp-content");
@@ -278,10 +278,10 @@ class WPInstall {
 	 * @param string $switch (default: "")
 	 * @return void
 	 */
-	private function prepare_wp_config($core_name, $content_name, $lang = "en", $switch = "", $upload_name) {
+	private function prepare_wp_config($destDir, $core_name, $content_name, $switch = "", $upload_name) {
 		$this->log("Creating wp-config");
 		// get wp-config-sample
-		$wp_config = file_get_contents(__DIR__.DIRECTORY_SEPARATOR."_wp-config-SAMPLE.php");
+		$wp_config = file_get_contents(WPInstall::RootDir.DIRECTORY_SEPARATOR."_wp-config-SAMPLE.php");
 		
 		// set table prefix
 		$rnd_prefix = str_split("abcdefghijklmnopqrstuvwxyz");
@@ -303,7 +303,7 @@ class WPInstall {
 		$wp_config = str_replace('// {{RUNTIME_SWITCH}}', $switch, $wp_config);
 
 		// write file
-		if ($this->write_to_file(__DIR__.DIRECTORY_SEPARATOR."wp-config.php", $wp_config)) {
+		if ($this->write_to_file($destDir.DIRECTORY_SEPARATOR."wp-config.php", $wp_config)) {
 			$this->debug("Your table prefix is: " . $rnd_prefix . "_");
 		}
 
