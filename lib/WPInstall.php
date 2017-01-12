@@ -65,18 +65,12 @@ class WPInstall {
 
 		// change absolute paths to new core dir
 		$this->log("changing index.php, .htaccess and .gitignore");
-		$this->sar_in_file($templateDir.DIRECTORY_SEPARATOR."index.php",
-		                   $destDir.DIRECTORY_SEPARATOR."index.php",
-		                   "core/",
-		                   $core_name."/");
-		$this->sar_in_file($templateDir.DIRECTORY_SEPARATOR.".htaccess",
-		                   $destDir.DIRECTORY_SEPARATOR.".htaccess",
-		                   "core/",
-		                   $core_name."/");
-		$this->sar_in_file($templateDir.DIRECTORY_SEPARATOR."gitignore",
-		                   $destDir.DIRECTORY_SEPARATOR.".gitignore",
-		                   "wp-content/",
-		                   $content_name."/");
+		$this->writeTemplate($templateDir.DIRECTORY_SEPARATOR."index.php", $destDir.DIRECTORY_SEPARATOR."index.php",
+		                     array("core/" => $core_name."/"));
+		$this->writeTemplate($templateDir.DIRECTORY_SEPARATOR.".htaccess", $destDir.DIRECTORY_SEPARATOR.".htaccess",
+		                     array("core/" => $core_name."/"));
+		$this->writeTemplate($templateDir.DIRECTORY_SEPARATOR."gitignore", $destDir.DIRECTORY_SEPARATOR.".gitignore",
+		                     array("wp-content/" => $content_name."/"));
 
 		$switch = $this->create_wp_environments($destDir, $runtimes);
 		$this->create_wp_config($destDir, $core_name, $content_name, $upload_name);
@@ -377,18 +371,19 @@ class WPInstall {
 	}
 
 	/**
-	 * open a file, search and replace
+	 * Write a template file with given data
 	 * 
 	 * @param string $src       Source file
 	 * @param string $dest      Destionation file
-	 * @param string $search
-	 * @param string $replace
+	 * @param array $data       Array with search => replacement values
 	 * @return void
 	 */
-	private function sar_in_file($src, $dest, $search, $replace) {
-		$this->write_to_file($dest,
-		                     str_replace($search, $replace, file_get_contents($src)),
-		                     true);
+	private function writeTemplate($src, $dest, $data = array()) {
+		$content = file_get_contents($src);
+		foreach ($data as $search => $replace) {
+			str_replace($search, $replace, $content);
+		}
+		$this->write_to_file($dest, $content, true);
 	}
 
 	/**
