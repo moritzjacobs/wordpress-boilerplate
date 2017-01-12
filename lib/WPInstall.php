@@ -8,8 +8,6 @@
  * @link       https://github.com/moritzjacobs/wordpress-boilerplate
  */
 class WPInstall {
-
-
 	/**
 	 * Wordpress.org API for retreiving fresh security keys
 	 *
@@ -30,9 +28,6 @@ class WPInstall {
 	 * @param string $core_name (default: "core")
 	 * @param string $content_name (default: "wp-content")
 	 * @param string $runtimes_str (default: "live)
-	 * @param mixed staging
-	 * @param mixed local"
-	 * @return void
 	 */
 	public function __construct($lang = "en", $core_name = "core", $content_name = "wp-content", $runtimes_str = "", $upload_name = '', $version = '') {
 		// Init vars
@@ -82,7 +77,7 @@ class WPInstall {
 		$this->download_core($wp_zip_url, $core_name, $destDir);
 		
 		// change absolute paths to new core dir
-		$this->log("changing index.php, .htaccess and .gitigore");
+		$this->log("changing index.php, .htaccess and .gitignore");
 		$this->set_core_path("index.php", $core_name);
 		$this->set_core_path(".htaccess", $core_name);
 		$this->sar_in_file(".gitignore", "wp-content/", $content_name."/");
@@ -115,7 +110,7 @@ class WPInstall {
 			$this->write_to_file($upload_dir_name.DIRECTORY_SEPARATOR."index.php", '<?php // Silence is golden.');
 		}
 		
-		// english lamguage Wordpress *has no translation files*
+		// english language Wordpress *has no translation files*
 		if($lang != "en") {
 			$this->copy_languages($destDir, $core_name, $content_name);
 		}
@@ -134,9 +129,6 @@ class WPInstall {
 		$this->log("<hr>");
 		$this->log("<a href=\"/\" class=\"btn btn-primary\">then continue to install Wordpress</a>");
 	}
-
-
-
 
 	/**
 	 * print to screen
@@ -164,7 +156,6 @@ class WPInstall {
 		@ob_flush();
 	}
 
-
 	/**
 	 * display debug info
 	 * 
@@ -175,7 +166,6 @@ class WPInstall {
 	private function debug($str) {
 		$this->log("<span style='color:blue'>$str</span>", false);
 	}
-
 
 	/**
 	 * display head
@@ -188,7 +178,6 @@ class WPInstall {
 		$this->log("<span style='color:blue;font-weight:bold'>$str <hr></span>", false);
 	}
 
-
 	/**
 	 * display notice
 	 * 
@@ -200,7 +189,6 @@ class WPInstall {
 		$this->notice_cnt++;
 		$this->log("<span style='color:orange;font-weight:bold'>".$str. "</span>", false);
 	}
-
 
 	/**
 	 * display error and die()
@@ -216,8 +204,6 @@ class WPInstall {
 		die("-- FAILED! --</span>");
 	}
 
-
-
 	/**
 	 * write to a file without overwriting (= force option)
 	 * 
@@ -225,16 +211,15 @@ class WPInstall {
 	 * @param mixed $file
 	 * @param mixed $content
 	 * @param bool $force (default: false)
-	 * @return void
+	 * @return bool
 	 */
 	private function write_to_file($file, $content, $force = false) {
 		if (!$force && file_exists($file)) {
 			$this->notice("Refusing to overwrite ".$file);
 			return false;
 		}
-		return file_put_contents($file, $content);
+		return is_int(file_put_contents($file, $content));
 	}
-
 
 	/**
 	 * Migrate translation files from the core
@@ -252,11 +237,11 @@ class WPInstall {
 
 			if (file_exists($dest)) {
 				$this->notice("Skipping languages...");
-				return false;
+				return;
 			}
 			if (!file_exists($source)) {
 				$this->notice("Core has no translation files");
-				return false;
+				return;
 			}
 			
 			// recursive copy
@@ -267,6 +252,7 @@ class WPInstall {
 					\RecursiveIteratorIterator::SELF_FIRST) as $item
 			) {
 				if ($item->isDir()) {
+					/* @var RecursiveDirectoryIterator $iterator */
 					mkdir($dest . DIRECTORY_SEPARATOR . $iterator->getSubPathName());
 				} else {
 					copy($item, $dest . DIRECTORY_SEPARATOR . $iterator->getSubPathName());
@@ -277,16 +263,12 @@ class WPInstall {
 		}
 	}
 
-
-
-
 	/**
 	 * Make a new wp-config and change some things
 	 * 
 	 * @access private
-	 * @param mixed $core_name
-	 * @param mixed $content_name
-	 * @param string $lang (default: "en")
+	 * @param string $core_name
+	 * @param string $content_name
 	 * @param string $switch (default: "")
 	 * @return void
 	 */
@@ -298,7 +280,7 @@ class WPInstall {
 		// set table prefix
 		$rnd_prefix = str_split("abcdefghijklmnopqrstuvwxyz");
 		shuffle($rnd_prefix);
-		$rnd_prefix = join(array_slice($rnd_prefix, 0, 3));
+		$rnd_prefix = join('', array_slice($rnd_prefix, 0, 3));
 		$wp_config = str_replace('{{TABLE_PREFIX}}', $rnd_prefix.'_', $wp_config);
 
 		// change core and content path
@@ -322,13 +304,11 @@ class WPInstall {
 		$this->hr();
 	}
 
-
-
 	/**
 	 * Download a new set of security keys from the wordpress.org API
 	 * 
 	 * @access private
-	 * @return void
+	 * @return bool
 	 */
 	private function get_sec_keys() {
 		curl_setopt($this->curl, CURLOPT_FRESH_CONNECT, true);
@@ -355,8 +335,6 @@ class WPInstall {
 		return $sec_keys;
 	}
 
-
-
 	/**
 	 * Display info about the predicted runtime for our defaults of "dev", "local", "staging" and "preview"
 	 * 
@@ -379,13 +357,12 @@ class WPInstall {
 		$this->debug("Current runtime is '" . $current_rt . "'");
 	}
 
-
 	/**
 	 * handle the runtime config creation.
 	 * 
 	 * @access private
 	 * @param mixed $runtimes
-	 * @return void
+	 * @return string
 	 */
 	private function create_runtimes($runtimes) {
 		$this->log("Creating runtimes:");
@@ -396,7 +373,7 @@ class WPInstall {
 		$this->write_to_file($rt_file_name, $tmp);
 
 		if (empty($runtimes) || $runtimes == '') {
-			return;
+			return '';
 		}
 		
 		$else = '';
@@ -423,7 +400,7 @@ class WPInstall {
 	 * @access private
 	 * @param string $downloadsDir
 	 * @param string $core_name
-	 * @return void
+	 * @return bool
 	 */
 	private function core_exists($downloadsDir, $core_name) {
 		return file_exists($downloadsDir.DIRECTORY_SEPARATOR.$core_name.DIRECTORY_SEPARATOR."wp_includes");
@@ -445,7 +422,6 @@ class WPInstall {
 		
 	}
 
-
 	/**
 	 * Replace default core dir
 	 * 
@@ -457,8 +433,6 @@ class WPInstall {
 	private function set_core_path($file, $core_name) {
 		$this->sar_in_file($file, "core/", $core_name."/");
 	}
-
-
 
 	/**
 	 * download the Wordpress core
@@ -477,7 +451,7 @@ class WPInstall {
 			// TODO how and when will this cache be invalidated
 			$this->notice("Skipping core download, Wordpress already exists...");
 			$this->hr();
-			return false;
+			return;
 		}
 
 		// make tmp
