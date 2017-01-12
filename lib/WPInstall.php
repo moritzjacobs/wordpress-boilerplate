@@ -15,22 +15,36 @@ class WPInstall {
 
 	private $notice_cnt = 0;
 	private $error_cnt = 0;
+
+	public function __construct() {
+		// init cURL
+		$this->curl = curl_init();
+		curl_setopt($this->curl, CURLOPT_HEADER, false);
+		curl_setopt($this->curl, CURLOPT_FOLLOWLOCATION, true);
+		curl_setopt($this->curl, CURLOPT_AUTOREFERER, true);
+		curl_setopt($this->curl, CURLOPT_TIMEOUT, 60);
+		curl_setopt($this->curl, CURLOPT_SSL_VERIFYHOST, false);
+		curl_setopt($this->curl, CURLOPT_FAILONERROR, true);
+	}
+
 	/**
-	 * Main function for processing the installation
-	 * 
+	 * Install a Wordpress instance into a directory
+	 *
+	 * @param string $destDir Absolute path of installation direcctory
 	 * @param string $lang (default: "en")
 	 * @param string $core_name (default: "core")
 	 * @param string $content_name (default: "wp-content")
 	 * @param string $runtimes_str (default: "live)
 	 */
-	public function __construct($lang = "en", $core_name = "core", $content_name = "wp-content", $runtimes_str = "", $upload_name = '', $version = '') {
+	function install($destDir, $lang = "en", $core_name = "core", $content_name = "wp-content", $runtimes_str = "", $upload_name = '', $version = '') {
 		// prepare args
 		$runtimes = array_map('trim',
-		                      explode(",",
-		                              $runtimes_str == '' ? 'local, live' : 'local, live, ' . $runtimes_str));
+		                      explode(",", $runtimes_str == '' ? 'local, live' : 'local, live, ' . $runtimes_str));
 		$core_name = $core_name == '' ? 'core' : $core_name;
 		$content_name = $content_name == '' ? 'wp-content' : $content_name;
 		$upload_name = $upload_name == '' ? $content_name.DIRECTORY_SEPARATOR.'uploads' : $upload_name;
+
+		$templateDir = realpath(WPInstall::RootDir.DIRECTORY_SEPARATOR.'templates');
 
 		$this->debug('language: <code>' .$lang.'</code><br>
 			core dir: <code>' . $core_name . '</code><br>
@@ -41,26 +55,14 @@ class WPInstall {
 
 		$this->head("Let's go!");
 
-		// init cURL
-		$this->curl = curl_init();
-		curl_setopt($this->curl, CURLOPT_HEADER, false);
-		curl_setopt($this->curl, CURLOPT_FOLLOWLOCATION, true);
-		curl_setopt($this->curl, CURLOPT_AUTOREFERER, true);
-		curl_setopt($this->curl, CURLOPT_TIMEOUT, 60);
-		curl_setopt($this->curl, CURLOPT_SSL_VERIFYHOST, false);
-		curl_setopt($this->curl, CURLOPT_FAILONERROR, true);
-		
 		// display current host runtime
 		$this->runtime_info();
 		$this->hr();
 
-		$destDir = WPInstall::RootDir.DIRECTORY_SEPARATOR.'wordpress';
-		$templateDir = WPInstall::RootDir.DIRECTORY_SEPARATOR.'templates';
-
 		// process core
 		$this->debug("Download from ". self::wp_download_url($version, $lang));
 		$this->download_core(self::wp_download_url($version, $lang), $core_name, $destDir);
-		
+
 		// change absolute paths to new core dir
 		$this->log("changing index.php, .htaccess and .gitignore");
 		$this->sar_in_file($templateDir.DIRECTORY_SEPARATOR."index.php",
@@ -80,7 +82,7 @@ class WPInstall {
 		$this->create_wp_config($destDir, $core_name, $content_name, $switch, $upload_name);
 		$this->copy_wp_content($destDir, $content_name);
 		$this->create_upload_dir($destDir, $upload_name);
-		
+
 		// english language Wordpress *has no translation files*
 		if ($lang != "en") {
 			$this->copy_languages($destDir, $core_name, $content_name);
@@ -369,12 +371,12 @@ class WPInstall {
 	 * does a core already exist?
 	 *
 	 * @access private
-	 * @param string $downloadsDir
+	 * @param string $destDir
 	 * @param string $core_name
 	 * @return bool
 	 */
-	private function core_exists($downloadsDir, $core_name) {
-		return file_exists($downloadsDir.DIRECTORY_SEPARATOR.$core_name.DIRECTORY_SEPARATOR."wp_includes");
+	private function core_exists($destDir, $core_name) {
+		return file_exists($destDir.DIRECTORY_SEPARATOR.$core_name);
 	}
 
 	/**

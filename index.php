@@ -227,7 +227,16 @@ require_once './lib/WPInstall.php'
 
 		<?php else: ?>
 			<div class="monospaced">
-				<?php $wpi = new WPInstall($_POST["lang"], $_POST["core_dir"], $_POST["content_dir"], $_POST["runtimes"], $_POST["upload_dir"], $_POST["version"]); ?>
+				<?php
+                $wpi = new WPInstall();
+                $wpi->install(__DIR__.DIRECTORY_SEPARATOR.'..',
+                              $_POST["lang"],
+                              $_POST["core_dir"],
+                              $_POST["content_dir"],
+                              $_POST["runtimes"],
+                              $_POST["upload_dir"],
+                              $_POST["version"])
+                ?>
 				<hr><span style='color:red;font-weight:bold'>
 				Don't forget to delete the following files<br>
 				<ol>
