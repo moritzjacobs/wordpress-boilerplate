@@ -72,6 +72,9 @@ class WPInstall {
 		$this->writeTemplate($templateDir.DIRECTORY_SEPARATOR."gitignore", $destDir.DIRECTORY_SEPARATOR.".gitignore",
 		                     array("wp-content/" => $content_name."/"));
 
+		$this->writeTemplate($templateDir.DIRECTORY_SEPARATOR."wp-config-environment.php",
+		                     $destDir.DIRECTORY_SEPARATOR."wp-config-environment.php");
+
 		$switch = $this->create_wp_environments($destDir, $runtimes);
 		$this->create_wp_config($destDir, $core_name, $content_name, $upload_name);
 		$this->copy_wp_content($destDir, $content_name);
