@@ -79,7 +79,7 @@ class WPInstall {
 		                   $content_name."/");
 
 		$switch = $this->create_wp_environments($destDir, $runtimes);
-		$this->create_wp_config($destDir, $core_name, $content_name, $switch, $upload_name);
+		$this->create_wp_config($destDir, $core_name, $content_name, $upload_name);
 		$this->copy_wp_content($destDir, $content_name);
 		$this->create_upload_dir($destDir, $upload_name);
 
@@ -259,10 +259,10 @@ class WPInstall {
 	 * @access private
 	 * @param string $core_name
 	 * @param string $content_name
-	 * @param string $switch (default: "")
+	 * @param string $upload_name
 	 * @return void
 	 */
-	private function create_wp_config($destDir, $core_name, $content_name, $switch = "", $upload_name) {
+	private function create_wp_config($destDir, $core_name, $content_name, $upload_name) {
 		$this->log("Creating wp-config");
 		// get wp-config-sample
 		$wp_config = file_get_contents(WPInstall::RootDir.DIRECTORY_SEPARATOR."_wp-config-SAMPLE.php");
@@ -277,9 +277,6 @@ class WPInstall {
 			$wp_config = str_replace("{{USE_UPLOAD_DIR}}", 'false', $wp_config);
 		}
 		
-		// add environment runtimes switch
-		$wp_config = str_replace('// {{RUNTIME_SWITCH}}', $switch, $wp_config);
-
 		// write file
 		$this->write_to_file($destDir.DIRECTORY_SEPARATOR."wp-config.php", $wp_config);
 

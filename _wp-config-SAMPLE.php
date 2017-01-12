@@ -5,31 +5,27 @@ $content_dir   = "{{CONTENT_DIR}}"; /* CONTENT_DIR */
 $use_media_dir = {{USE_UPLOAD_DIR}}; // if you want to use a different media dir /* {{USE_MEDIA_DIR}} */
 $media_dir     = "{{UPLOAD_DIR}}"; /* MEDIA_DIR */
 
-
-
-/* Figure out, set environment and load wp-config-* accordingly. */
-function host_contains($str) {
-	return stristr($_SERVER['SERVER_NAME'], $str);
+// Determine environment
+if (file_exists(__DIR__.DIRECTORY_SEPARATOR.'wp-config-env.php')) {
+	// First try a file 'wp-config-env.php'
+	require_once __DIR__.DIRECTORY_SEPARATOR.'wp-config-env.php';
 }
-switch (true) {
-	case host_contains("dev"):
-	case host_contains("local"):
-	case host_contains("localhost"):
-		$runtime_env = "local";
-		define( 'WP_LOCAL_DEV', true );
-		break; // {{RUNTIME_SWITCH}} 
-	default:
-		$runtime_env = "live";
-		break;
+if (!defined('WP_SERVER_ENVIRONMENT') && isset($_SERVER['WP_SERVER_ENVIRONMENT'])) {
+	// If not set, try an environment variable WP_SERVER_ENVIRONMENT
+	define('WP_SERVER_ENVIRONMENT', $_SERVER['WP_SERVER_ENVIRONMENT']);
 }
-define('WP_SERVER_ENVIRONMENT', $runtime_env);
+else {
+	// Use 'dev' as fallback
+	define('WP_SERVER_ENVIRONMENT', 'dev');
+}
+
 /* MySQL Settings are in the environment specific configs */
 include( dirname( __FILE__ ) . '/wp-config-'.$runtime_env.'.php' );
-
 
 /* MySQL database settings - you most certainly don't want to change these */
 define( 'DB_CHARSET', 'utf8' );
 define( 'DB_COLLATE', 'utf8_general_ci' );
+
 /* MySQL database user tables */
 //define( 'CUSTOM_USER_TABLE',      $table_prefix . 'accounts' );
 //define( 'CUSTOM_USER_META_TABLE', $table_prefix . 'accountsmeta' );
@@ -50,7 +46,6 @@ if ( WP_DEBUG || WP_LOCAL_DEV) {
 	define( 'SCRIPT_DEBUG',     false );
 	define( 'SAVEQUERIES',      false );
 }
-
 
 /* Using SSL? */
 $server_protocol = ((!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off') || (!empty($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https')) ? 'https://' : 'http://';
