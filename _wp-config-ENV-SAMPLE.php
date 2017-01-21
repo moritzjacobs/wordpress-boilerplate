@@ -1,9 +1,13 @@
 <?php
+/**
+ *  Modify values marked with * -- *
+ */
 
-define( 'DB_HOST', 		'localhost' );
-define( 'DB_NAME', 		'local_db_name' );
-define( 'DB_USER', 		'local_db_user' );
-define( 'DB_PASSWORD', 	'local_db_password' );
+define('DB_HOST', 		'* host *');
+define('DB_NAME', 		'* db_name *');
+define('DB_USER', 		'* db_user *');
+define('DB_PASSWORD', 	'* db_password *');
+
 /* MySQL database table prefix */
 $table_prefix  = '{{TABLE_PREFIX}}';
 
@@ -11,5 +15,5 @@ $table_prefix  = '{{TABLE_PREFIX}}';
 /* https://api.wordpress.org/secret-key/1.1/salt/ */
 // {{SECURITY_KEYS}}
 
-/* show error */
-define( 'WP_DEBUG', true );
+define('WP_DEBUG', * true|false *);
+define('WP_LOCAL_DEV', * true|false *);
