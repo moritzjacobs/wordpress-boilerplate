@@ -10,24 +10,47 @@ This is a boilerplate and installation script for Wordpress with the WP core as 
 
 
 ### Running the installer will…
-- download and unpack the current stable Wordpress core in your language of choice
-- rename the `core` and `wp-content` folders
-- create an `uploads` folder outside of wp-content
-- set up at least two runtime environment configurations (local and live). Those will be detected based on your host name. eg. `your_host.dev`, `stage.domain.com`
-- create a random DB prefix
-- create fresh secret keys for each runtime environment.
-- migrate the language files from core
-- install a couple of MU-Plugins
+- Download and unpack the current stable Wordpress core in your language of choice
+- Rename the `core` and `wp-content` folders
+- Create an `uploads` folder outside of wp-content
+- Set up at least two runtime environment configurations (local and live). Those will be detected based on your host name. eg. `your_host.dev`, `stage.domain.com`
+- Create a random DB prefix
+- Create fresh secret keys for each runtime environment.
+- Migrate the language files from core
+- Install a couple of MU-Plugins
 
 
 ## Instructions
-1. Rename `gitigore` and `htaccess` to dotfiles
-2. Surf to `http://your_host.dev/_install.php`
+1. Extract the distribution zip in your web root as *wordpress-boilerplate*
+2. Surf to [http://your_host.dev/wordpress-boilerplate/](http://your_host.dev/wordpress-boilerplate/)
 3. Follow the instructions
-4. Delete `_install.php`, `_wp-config-ENV_SAMPLE.php` and `wp-config-SAMPLE.php`
-5. Double check `wp-config.php` and edit your runtime configs
-6. Continue with the usual wordpress install in `http://your-host/`
+5. Double check `wp-config.php` and edit your environment configs `wp-config-*.php`
+6. Set your environment (see below), default is 'dev'
+6. Continue with the usual Wordpress install in [http://your_host.dev](http://your_host.dev)
 
+## Setting the environment
+
+### Via config file
+Create or edit a file `/wp-config-environment.php` with a content like
+```
+<?php
+
+define('WP_SERVER_ENVIRONMENT', 'production');
+```
+
+### Nginx
+Add to your server setting:
+```
+location / {
+   fastcgi_param   WP_SERVER_ENVIRONMENT  env;
+}
+```
+
+### Apache
+Add to your to your `VirtualHost` or `Location` section:
+``` 
+SetEnv WP_SERVER_ENVIRONMENT env
+```
 
 ## changelog
 
