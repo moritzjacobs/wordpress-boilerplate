@@ -1,9 +1,10 @@
 <?php
 /**
  * Plugin Name: Neonpastell Wordpress Bootstrap Plugins
- * Description: —
+ * Description: de/activate plugins based on folder prefix: use _PLUGINNAME to disable plugin
  * Author: Moritz Jacobs
- * Version: 1.0
+ * Author URI: http://www.moritzjacobs.de
+ * Version: 1.0.0
  */
  
 

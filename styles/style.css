@@ -1,0 +1,42 @@
+body {
+	color: #666;
+	padding: 20px 30px;
+	width: 700px;
+	margin: auto;
+}
+
+.form-control {
+	max-width: 250px;
+}
+
+.spinner {
+	display: block;
+}
+
+@-moz-keyframes spinner { 100% { -moz-transform: rotate(360deg); } }
+@-webkit-keyframes spinner { 100% { -webkit-transform: rotate(360deg); } }
+@keyframes spinner { 100% { -webkit-transform: rotate(360deg); transform:rotate(360deg); } }
+
+.spinner:after {
+	display: none;
+	margin-left: 10px;
+	content: "\27F3";
+	-webkit-animation: spinner 1s linear infinite;
+	-moz-animation: spinner 1s linear infinite;
+	animation: spinner 1s linear infinite;
+	color: #aaa;
+	font-size: 1.5em;
+}
+
+.spinner:last-child:after {
+	display: inline-block;
+}
+
+.monospaced {
+	font-family: monospace;
+	margin-top: 50px;
+}
+
+input[type=submit] {
+	width:
+}
