@@ -6,9 +6,9 @@ $use_media_dir = {{USE_UPLOAD_DIR}}; // if you want to use a different media dir
 $media_dir     = "{{UPLOAD_DIR}}"; /* MEDIA_DIR */
 
 // Determine environment
-if (file_exists(__DIR__.DIRECTORY_SEPARATOR.'wp-config-env.php')) {
+if (file_exists(__DIR__.DIRECTORY_SEPARATOR.'wp-config-environment.php')) {
 	// First try a file 'wp-config-env.php'
-	require_once __DIR__.DIRECTORY_SEPARATOR.'wp-config-env.php';
+	require_once __DIR__.DIRECTORY_SEPARATOR.'wp-config-environment.php';
 }
 if (!defined('WP_SERVER_ENVIRONMENT') && isset($_SERVER['WP_SERVER_ENVIRONMENT'])) {
 	// If not set, try an environment variable WP_SERVER_ENVIRONMENT
@@ -20,7 +20,7 @@ else {
 }
 
 /* MySQL Settings are in the environment specific configs */
-include( dirname( __FILE__ ) . '/wp-config-'.$runtime_env.'.php' );
+include( dirname( __FILE__ ) . '/wp-config-'.WP_SERVER_ENVIRONMENT.'.php' );
 
 /* MySQL database settings - you most certainly don't want to change these */
 define( 'DB_CHARSET', 'utf8' );
