@@ -213,7 +213,7 @@ require_once './lib/WPInstall.php'
 						<input type="text" id="content_dir" class="form-control" value="wp-content" name="content_dir" placeholder="use default: wp-content">
 					</div>
 					<div class="form-group">
-						<label for="upload_dir">upload dir (default 'wp-content/upload')</label>
+						<label for="upload_dir">upload dir (default 'wp-content/uploads')</label>
 						<input type="text" id="upload_dir" class="form-control" value="" name="upload_dir" placeholder="use default: wp-content/uploads">
 					</div>
 					<div class="form-group">
@@ -238,12 +238,7 @@ require_once './lib/WPInstall.php'
                               $_POST["version"])
                 ?>
 				<hr><span style='color:red;font-weight:bold'>
-				Don't forget to delete the following files<br>
-				<ol>
-					<li><code>_install.php</code></li>
-					<li><code>_wp-config-ENV-SAMPLE.php</code></li>
-					<li><code>_wp-config-SAMPLE.php</code></li>
-				</ol>
+				Don't forget to delete the setup dir!<br>
 				
 			</div>
 		<?php endif ?>
