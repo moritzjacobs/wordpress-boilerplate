@@ -1,19 +1,4 @@
 # ----------------------------------------------------------------------
-# Wordpress boilerplate, do not change!
-# ----------------------------------------------------------------------
-
-# BEGIN WordPress
-<IfModule mod_rewrite.c>
-	RewriteEngine On
-	RewriteBase /
-	RewriteRule ^index\.php$ - [L]
-	RewriteCond %{REQUEST_FILENAME} !-f
-	RewriteCond %{REQUEST_FILENAME} !-d
-	RewriteRule . /index.php [L]
-</IfModule>
-# END WordPress
-
-# ----------------------------------------------------------------------
 # 301 REWRITES
 # ----------------------------------------------------------------------
 
@@ -339,3 +324,18 @@ RewriteRule ^(.*)$ index.php [F,L]
 	Deny from all
 	Satisfy All
 </FilesMatch>
+
+# ----------------------------------------------------------------------
+# Wordpress boilerplate, do not change!
+# ----------------------------------------------------------------------
+
+# BEGIN WordPress
+<IfModule mod_rewrite.c>
+	RewriteEngine On
+	RewriteBase /
+	RewriteRule ^index\.php$ - [L]
+	RewriteCond %{REQUEST_FILENAME} !-f
+	RewriteCond %{REQUEST_FILENAME} !-d
+	RewriteRule . /index.php [L]
+</IfModule>
+# END WordPress
