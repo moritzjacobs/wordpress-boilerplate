@@ -1,6 +1,18 @@
 <?php
 
 /**
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ *
  * Determine environment
  */
 
@@ -26,18 +38,29 @@ include dirname(__FILE__) . '/wp-config-' . WP_SERVER_ENVIRONMENT . '.php';
  *
  *
  *
+ *
+ *
+ *
+ *
+ *
+ *
  * Custom directory structure
  */
 
-$wp_core_dir = '{{WP_CORE_DIR}}'; // {{WP_CORE_DIR}}
-$content_dir = '{{CONTENT_DIR}}'; // {{CONTENT_DIR}}
-$media_dir = '{{UPLOAD_DIR}}'; // MEDIA_DIR
+$WPNP_CORE_NAME = '{{WP_CORE_DIR}}'; // core
+$WPNP_CONTENT_NAME = '{{CONTENT_DIR}}'; // site
+$WPNP_UPLOAD_NAME = '{{UPLOAD_DIR}}';
 
-define('WP_CONTENT_URL', "https://" . $_SERVER['HTTP_HOST'] . '/' . $content_dir);
-define('WP_CONTENT_DIR', __DIR__ . '/' . $content_dir);
-define('WP_ROOT', __DIR__ . '/' . $wp_core_dir);
+define('WP_CONTENT_URL', "https://" . $_SERVER['HTTP_HOST'] . '/' . $WPNP_CONTENT_NAME);
+define('WP_CONTENT_DIR', __DIR__ . '/' . $WPNP_CONTENT_NAME);
+define('WP_ROOT', __DIR__ . '/' . $WPNP_CORE_NAME);
 
 /**
+ *
+ *
+ *
+ *
+ *
  *
  *
  *
@@ -91,6 +114,13 @@ define('FORCE_SSL_ADMIN', true);
 define('DISALLOW_FILE_EDIT', true);
 
 /**
+ *
+ *
+ *
+ *
+ *
+ *
+ *
  *
  *
  *
