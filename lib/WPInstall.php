@@ -76,7 +76,7 @@ class WPInstall {
 			$templateDir . "/gitignore",
 			$destDir . "/.gitignore",
 			array(
-				"wp-content/uploads" => $uploadName . "/",
+				"wp-content/uploads/" => $uploadName . "/",
 				"wp-content/" => $contentName . "/",
 			)
 		);

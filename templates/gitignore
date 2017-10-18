@@ -8,6 +8,10 @@ logs
 *.log
 *.map
 
+# MAMP certs
+/*.crt
+/*.key
+
 # PROJECT SPECIFIC
 /wp-config-*.php
 core/*
