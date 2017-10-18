@@ -31,18 +31,18 @@ class WPInstall {
 	 * @param string $lang (default: "en")
 	 * @param string $coreName (default: "core")
 	 * @param string $contentName (default: "site")
-	 * @param string $runtimes_str (default: "local, live")
+	 * @param string $runtimesStr (default: "local, live")
 	 */
 
-	function install($destDir, $lang = "en", $coreName = "core", $contentName = "site", $runtimes_str = "local, live", $upload_name = "files", $version = "latest") {
-		$runtimes = array_map("trim", explode(",", $runtimes_str));
+	function install($destDir, $lang = "en", $coreName = "core", $contentName = "site", $runtimesStr = "local, live", $uploadName = "files", $version = "latest") {
+		$runtimes = array_map("trim", explode(",", $runtimesStr));
 		$templateDir = realpath(dirname(__DIR__) . "/templates");
 
 		$this->debug("language: <code>" . $lang . "</code><br>
 			core dir: <code>" . $coreName . "</code><br>
 			content dir: <code>" . $contentName . "</code><br>
-			upload dir: <code>" . $upload_name . "</code><br>
-			runtime configs: <code>" . $runtimes_str . "</code><br>
+			upload dir: <code>" . $uploadName . "</code><br>
+			runtime configs: <code>" . $runtimesStr . "</code><br>
 		");
 
 		$this->head("Let’s go!");
@@ -68,7 +68,7 @@ class WPInstall {
 			$destDir . "/.htaccess",
 			array(
 				"{{CORE_DIR_NAME}}" => $coreName,
-				"{{UPLOAD_DIR_PATH}}" => $upload_name,
+				"{{UPLOAD_DIR_PATH}}" => $uploadName,
 			)
 		);
 
@@ -76,6 +76,7 @@ class WPInstall {
 			$templateDir . "/gitignore",
 			$destDir . "/.gitignore",
 			array(
+				"wp-content/uploads" => $uploadName . "/",
 				"wp-content/" => $contentName . "/",
 			)
 		);
@@ -91,7 +92,7 @@ class WPInstall {
 			array(
 				"{{WP_CORE_DIR}}" => $coreName,
 				"{{CONTENT_DIR}}" => $contentName,
-				"{{UPLOAD_DIR}}" => $upload_name,
+				"{{UPLOAD_DIR}}" => $uploadName,
 			)
 		);
 
@@ -102,7 +103,7 @@ class WPInstall {
 		$this->copyWpContent($destDir, $contentName);
 
 		// create upload dir
-		$this->createUploadDir($destDir, $upload_name);
+		$this->createUploadDir($destDir, $uploadName);
 
 		// english language Wordpress *has no translation files*
 		if ($lang != "en") {
@@ -236,8 +237,8 @@ class WPInstall {
 		}
 	}
 
-	private function createUploadDir($destDir, $upload_name) {
-		$uploadDirName = $destDir . "/" . $upload_name;
+	private function createUploadDir($destDir, $uploadName) {
+		$uploadDirName = $destDir . "/" . $uploadName;
 		if (!file_exists($uploadDirName)) {
 			mkdir($uploadDirName, 0755, true);
 		}
@@ -284,14 +285,14 @@ class WPInstall {
 		curl_setopt($this->curl, CURLOPT_FRESH_CONNECT, true);
 		curl_setopt($this->curl, CURLOPT_URL, self::SecApiUrl);
 		curl_setopt($this->curl, CURLOPT_RETURNTRANSFER, 1);
-		$sec_keys = curl_exec($this->curl);
+		$secKeys = curl_exec($this->curl);
 
-		if (!$sec_keys) {
+		if (!$secKeys) {
 			$this->error("notice: " . curl_error($this->curl));
 			die();
 		}
 
-		return $sec_keys;
+		return $secKeys;
 	}
 
 	/**
@@ -316,23 +317,23 @@ class WPInstall {
 		$template = file_get_contents(dirname(__DIR__) . "/_wp-config-ENV-SAMPLE.php");
 
 		$else = "";
-		foreach ($runtimes as $rt_name) {
+		foreach ($runtimes as $rtName) {
 			// switch case for wp-config
 			$else .=
 				"\n\t" .
-				"case host_contains('" . $rt_name . "'): " .
-				"\n\t\t" . "\$runtime_env = '" . $rt_name . "'; " .
+				"case host_contains('" . $rtName . "'): " .
+				"\n\t\t" . "\$runtime_env = '" . $rtName . "'; " .
 				"\n\t\t" . "break; ";
 
 			// create wp-config-runtime
-			$this->log("Creating runtime config: " . $rt_name);
+			$this->log("Creating runtime config: " . $rtName);
 			// replace strings and write file
-			$rt_file_content = str_replace("// {{SECURITY_KEYS}}", $this->getSecurityKeys(), $template);
-			$rt_file_content = str_replace("local_", $rt_name . "_", $rt_file_content);
-			$rt_file_content = str_replace("{{TABLE_PREFIX}}", WPInstall::generateTablePrefix() . "_", $rt_file_content);
+			$rtFileContent = str_replace("// {{SECURITY_KEYS}}", $this->getSecurityKeys(), $template);
+			$rtFileContent = str_replace("local_", $rtName . "_", $rtFileContent);
+			$rtFileContent = str_replace("{{TABLE_PREFIX}}", WPInstall::generateTablePrefix() . "_", $rtFileContent);
 
-			$this->writeToFile($destDir . "/wp-config-" . $rt_name . ".php",
-				$rt_file_content);
+			$this->writeToFile($destDir . "/wp-config-" . $rtName . ".php",
+				$rtFileContent);
 		}
 
 		return $else;
@@ -381,14 +382,14 @@ class WPInstall {
 			$this->notice("Skipping core download, Wordpress already exists in this location...");
 			$this->hr();
 		} else {
-			$zip_tmp = tempnam(sys_get_temp_dir(), "wordpressZip");
-			$zip_res = fopen($zip_tmp, "w");
+			$zipTmp = tempnam(sys_get_temp_dir(), "wordpressZip");
+			$zipRes = fopen($zipTmp, "w");
 
 			curl_setopt($this->curl, CURLOPT_URL, $url);
 			curl_setopt($this->curl, CURLOPT_BINARYTRANSFER, true);
 			curl_setopt($this->curl, CURLOPT_FRESH_CONNECT, false);
 			curl_setopt($this->curl, CURLOPT_SSL_VERIFYPEER, 0);
-			curl_setopt($this->curl, CURLOPT_FILE, $zip_res);
+			curl_setopt($this->curl, CURLOPT_FILE, $zipRes);
 			$this->log("Start download from " . $url);
 
 			if (!curl_exec($this->curl)) {
@@ -397,7 +398,7 @@ class WPInstall {
 			} else {
 				$zip = new ZipArchive;
 				$this->log("Start unzipping core");
-				if ($zip->open($zip_tmp)) {
+				if ($zip->open($zipTmp)) {
 					$zip->extractTo($destDir);
 					$zip->close();
 
