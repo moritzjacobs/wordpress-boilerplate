@@ -34,7 +34,7 @@ class WPInstall {
 	 * @param string $runtimes_str (default: "local, live")
 	 */
 
-	function install($destDir, $lang = "en", $coreName = "core", $contentName = "site", $runtimes_str = "local, live", $upload_name = "file", $version = "latest") {
+	function install($destDir, $lang = "en", $coreName = "core", $contentName = "site", $runtimes_str = "local, live", $upload_name = "files", $version = "latest") {
 		$runtimes = array_map("trim", explode(",", $runtimes_str));
 		$templateDir = realpath(dirname(__DIR__) . "/templates");
 

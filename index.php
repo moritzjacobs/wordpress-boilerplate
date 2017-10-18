@@ -215,7 +215,7 @@ require_once './lib/WPInstall.php'
 					</div>
 					<div class="form-group">
 						<label for="upload_dir">upload dir</label>
-						<input type="text" id="upload_dir" class="form-control" value="file" name="upload_dir" placeholder="use default: file">
+						<input type="text" id="upload_dir" class="form-control" value="files" name="upload_dir" placeholder="use default: files">
 					</div>
 					<div class="form-group">
 						<label for="runtimes">runtime environments (comma separated)</label>
