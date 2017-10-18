@@ -1,0 +1,21 @@
+{
+  "name": "wordpress-boilerplate",
+  "version": "1.3.0",
+  "description":
+    "This is a boilerplate and installation script for Wordpress with the WP core as a dependency and some other stuff.",
+  "main": "index.php",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/moritzjacobs/wordpress-boilerplate.git"
+  },
+  "keywords": [],
+  "author":
+    "Moritz Jacobs <mail@moritzjacobs.de> (https://www.github.com/moritzjacobs)",
+  "contributors": [
+    "Manuel Piepereit <manuel.piepereit@neonpastell.de>",
+    "André Wachter",
+    "Claus Hoffmann <claus@yeah.de>"
+  ],
+  "license": "ISC",
+  "homepage": "https://github.com/moritzjacobs/wordpress-boilerplate#readme"
+}
