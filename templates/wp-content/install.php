@@ -5,5 +5,5 @@
  * @link http://wordpress.stackexchange.com/a/71867/8872
  */
 function wp_install_defaults() {
-    return null;
+	return null;
 }

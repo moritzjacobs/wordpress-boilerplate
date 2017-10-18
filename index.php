@@ -16,7 +16,7 @@ require_once './lib/WPInstall.php'
 
 			<h1>wordpress-boilerplate</h1>
 			<p>This is a boilerplate and installation script for Wordpress with the WP core as a dependency and some other stuff.</p>
-			
+
 			<h2>Instructions</h2>
 			<ol>
 				<li>Customize settings and run installer</li>
@@ -27,8 +27,8 @@ require_once './lib/WPInstall.php'
 
 			<hr>
 
-			<?php $offline = !@fopen("http://www.google.com:80/","r"); ?>
-			<?php if($offline): ?>
+			<?php $offline = !@fopen("http://www.google.com:80/", "r");?>
+			<?php if ($offline): ?>
 				<button class="btn btn-disabled" type="submit">Check your internet connection</button>
 			<?php else: ?>
 				<h2>Settings</h2>
@@ -220,27 +220,27 @@ require_once './lib/WPInstall.php'
 						<label for="runtimes">additional runtime environments (comma separated)</label>
 						<input type="text" class="form-control" value="" name="runtimes" placeholder="staging, preproduction">
 					</div>
-					
+
 					<button class="btn btn-primary" type="submit" name="go" value="go">Click here to start the installation</button>
 				</form>
-			<?php endif; ?>
+			<?php endif;?>
 
 		<?php else: ?>
 			<div class="monospaced">
 				<?php
-                $wpi = new WPInstall();
-                $wpi->install(__DIR__.DIRECTORY_SEPARATOR.'..',
-                              $_POST["lang"],
-                              $_POST["core_dir"],
-                              $_POST["content_dir"],
-                              $_POST["runtimes"],
-                              $_POST["upload_dir"],
-                              $_POST["version"])
-                ?>
+					$wpi = new WPInstall();
+					$wpi->install(__DIR__ . DIRECTORY_SEPARATOR . '..',
+						$_POST["lang"],
+						$_POST["core_dir"],
+						$_POST["content_dir"],
+						$_POST["runtimes"],
+						$_POST["upload_dir"],
+						$_POST["version"])
+					?>
 				<hr><span style='color:red;font-weight:bold'>
 				Don't forget to delete the setup dir!<br>
-				
+
 			</div>
-		<?php endif ?>
+		<?php endif?>
 </body>
 </html>

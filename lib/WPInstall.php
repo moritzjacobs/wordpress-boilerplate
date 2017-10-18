@@ -11,7 +11,7 @@ class WPInstall {
 	/** Wordpress.org API for retreiving fresh security keys */
 	const SecApiUrl = "https://api.wordpress.org/secret-key/1.1/salt/";
 
-	const RootDir = __DIR__.DIRECTORY_SEPARATOR."..";
+	const RootDir = __DIR__ . DIRECTORY_SEPARATOR . "..";
 
 	private $notice_cnt = 0;
 	private $error_cnt = 0;
@@ -39,14 +39,14 @@ class WPInstall {
 	function install($destDir, $lang = "en", $core_name = "core", $content_name = "wp-content", $runtimes_str = "", $upload_name = '', $version = '') {
 		// prepare args
 		$runtimes = array_map('trim',
-		                      explode(",", $runtimes_str == '' ? 'local, live' : 'local, live, ' . $runtimes_str));
+			explode(",", $runtimes_str == '' ? 'local, live' : 'local, live, ' . $runtimes_str));
 		$core_name = $core_name == '' ? 'core' : $core_name;
 		$content_name = $content_name == '' ? 'wp-content' : $content_name;
-		$upload_name = $upload_name == '' ? $content_name.DIRECTORY_SEPARATOR.'uploads' : $upload_name;
+		$upload_name = $upload_name == '' ? $content_name . DIRECTORY_SEPARATOR . 'uploads' : $upload_name;
 
-		$templateDir = realpath(WPInstall::RootDir.DIRECTORY_SEPARATOR.'templates');
+		$templateDir = realpath(WPInstall::RootDir . DIRECTORY_SEPARATOR . 'templates');
 
-		$this->debug('language: <code>' .$lang.'</code><br>
+		$this->debug('language: <code>' . $lang . '</code><br>
 			core dir: <code>' . $core_name . '</code><br>
 			content dir: <code>' . $content_name . '</code><br>
 			upload dir: <code>' . $upload_name . '</code><br>
@@ -60,20 +60,20 @@ class WPInstall {
 		$this->hr();
 
 		// process core
-		$this->debug("Download from ". self::wp_download_url($version, $lang));
+		$this->debug("Download from " . self::wp_download_url($version, $lang));
 		$this->download_core(self::wp_download_url($version, $lang), $core_name, $destDir);
 
 		// change absolute paths to new core dir
 		$this->log("changing index.php, .htaccess and .gitignore");
-		$this->writeTemplate($templateDir.DIRECTORY_SEPARATOR."index.php", $destDir.DIRECTORY_SEPARATOR."index.php",
-		                     array("core/" => $core_name."/"));
-		$this->writeTemplate($templateDir.DIRECTORY_SEPARATOR.".htaccess", $destDir.DIRECTORY_SEPARATOR.".htaccess",
-		                     array("core/" => $core_name."/"));
-		$this->writeTemplate($templateDir.DIRECTORY_SEPARATOR."gitignore", $destDir.DIRECTORY_SEPARATOR.".gitignore",
-		                     array("wp-content/" => $content_name."/"));
+		$this->writeTemplate($templateDir . DIRECTORY_SEPARATOR . "index.php", $destDir . DIRECTORY_SEPARATOR . "index.php",
+			array("core/" => $core_name . "/"));
+		$this->writeTemplate($templateDir . DIRECTORY_SEPARATOR . ".htaccess", $destDir . DIRECTORY_SEPARATOR . ".htaccess",
+			array("core/" => $core_name . "/"));
+		$this->writeTemplate($templateDir . DIRECTORY_SEPARATOR . "gitignore", $destDir . DIRECTORY_SEPARATOR . ".gitignore",
+			array("wp-content/" => $content_name . "/"));
 
-		$this->writeTemplate($templateDir.DIRECTORY_SEPARATOR."wp-config-environment.php",
-		                     $destDir.DIRECTORY_SEPARATOR."wp-config-environment.php");
+		$this->writeTemplate($templateDir . DIRECTORY_SEPARATOR . "wp-config-environment.php",
+			$destDir . DIRECTORY_SEPARATOR . "wp-config-environment.php");
 
 		$switch = $this->create_wp_environments($destDir, $runtimes);
 		$this->create_wp_config($destDir, $core_name, $content_name, $upload_name);
@@ -88,7 +88,7 @@ class WPInstall {
 		curl_close($this->curl);
 
 		// display the number of errors and notices
-		$conclusion = $this->notice_cnt . " notices, ".$this->error_cnt. " errors!";
+		$conclusion = $this->notice_cnt . " notices, " . $this->error_cnt . " errors!";
 		if ($this->error_cnt == 0) {
 			$this->notice($conclusion);
 		} else {
@@ -110,20 +110,20 @@ class WPInstall {
 
 	/**
 	 * print to screen
-	 * 
+	 *
 	 * @param string $str
 	 * @param bool $spinner (default: true)
 	 * @return void
 	 */
 	private function log($str, $spinner = true) {
-		echo "<div".($spinner ? " class='spinner'>" : ">") . ($str) . "</div>";
+		echo "<div" . ($spinner ? " class='spinner'>" : ">") . ($str) . "</div>";
 		@flush();
 		@ob_flush();
 	}
 
 	/**
 	 * display horizontal line
-	 * 
+	 *
 	 * @return void
 	 */
 	private function hr() {
@@ -134,7 +134,7 @@ class WPInstall {
 
 	/**
 	 * display debug info
-	 * 
+	 *
 	 * @param string $str
 	 * @return void
 	 */
@@ -144,7 +144,7 @@ class WPInstall {
 
 	/**
 	 * display head
-	 * 
+	 *
 	 * @param string $str
 	 * @return void
 	 */
@@ -154,18 +154,18 @@ class WPInstall {
 
 	/**
 	 * display notice
-	 * 
+	 *
 	 * @param string $str
 	 * @return void
 	 */
 	private function notice($str) {
 		$this->notice_cnt++;
-		$this->log("<span style='color:orange;font-weight:bold'>".$str. "</span>", false);
+		$this->log("<span style='color:orange;font-weight:bold'>" . $str . "</span>", false);
 	}
 
 	/**
 	 * display error and die()
-	 * 
+	 *
 	 * @param string $str
 	 * @return void
 	 */
@@ -178,7 +178,7 @@ class WPInstall {
 
 	/**
 	 * write to a file without overwriting (= force option)
-	 * 
+	 *
 	 * @param string $file
 	 * @param string $content
 	 * @param bool $force (default: false)
@@ -186,38 +186,37 @@ class WPInstall {
 	 */
 	private function write_to_file($file, $content, $force = false) {
 		if (!$force && file_exists($file)) {
-			$this->notice("Refusing to overwrite ".$file);
+			$this->notice("Refusing to overwrite " . $file);
 			return false;
 		}
 		return is_int(file_put_contents($file, $content));
 	}
 
 	private function copy_wp_content($destDir, $content_name) {
-		$wpContentDir = $destDir.DIRECTORY_SEPARATOR.$content_name;
+		$wpContentDir = $destDir . DIRECTORY_SEPARATOR . $content_name;
 
 		if (!is_dir($wpContentDir)) {
 			$this->log("attempt to copy wp-content to ${wpContentDir}");
-			self::copy_tree(self::RootDir.DIRECTORY_SEPARATOR.'templates/wp-content', $wpContentDir);
-		}
-		else {
+			self::copy_tree(self::RootDir . DIRECTORY_SEPARATOR . 'templates/wp-content', $wpContentDir);
+		} else {
 			$this->notice("wp-content dir '${wpContentDir}' already exists");
 		}
 	}
 
 	private function create_upload_dir($destDir, $upload_name) {
-		$upload_dir_name = $destDir.DIRECTORY_SEPARATOR.$upload_name;
+		$upload_dir_name = $destDir . DIRECTORY_SEPARATOR . $upload_name;
 		if (!file_exists($upload_dir_name)) {
 			// TODO review permissions
 			mkdir($upload_dir_name, 0777, true);
 		}
-		$indexFile = $upload_dir_name.DIRECTORY_SEPARATOR."index.php";
+		$indexFile = $upload_dir_name . DIRECTORY_SEPARATOR . "index.php";
 		if (!file_exists($indexFile)) {
 			$this->write_to_file($indexFile, '<?php // Silence is golden.');
 		}
 	}
 	/**
 	 * Migrate translation files from the core
-	 * 
+	 *
 	 * @access private
 	 * @param string $destDir
 	 * @param string $core_name
@@ -227,32 +226,29 @@ class WPInstall {
 	private function copy_languages($destDir, $core_name, $content_name) {
 		// Is there already a core?
 		if ($this->core_exists($destDir, $core_name)) {
-			$source = $destDir.DIRECTORY_SEPARATOR
-				.$core_name.DIRECTORY_SEPARATOR
-				."wp-content".DIRECTORY_SEPARATOR
-				."languages";
-			$dest = $destDir.DIRECTORY_SEPARATOR
-				.$content_name.DIRECTORY_SEPARATOR
-				."languages";
+			$source = $destDir . DIRECTORY_SEPARATOR
+				. $core_name . DIRECTORY_SEPARATOR
+				. "wp-content" . DIRECTORY_SEPARATOR
+				. "languages";
+			$dest = $destDir . DIRECTORY_SEPARATOR
+				. $content_name . DIRECTORY_SEPARATOR
+				. "languages";
 
 			if (file_exists($dest)) {
 				$this->notice("Skipping languages...");
-			}
-			else if (!file_exists($source)) {
+			} else if (!file_exists($source)) {
 				$this->notice("Core has no translation files");
-			}
-			else {
+			} else {
 				self::copy_tree($source, $dest);
 			}
-		}
-		else {
+		} else {
 			$this->notice("Can't find translation files?");
 		}
 	}
 
 	/**
 	 * Make a new wp-config and change some things
-	 * 
+	 *
 	 * @access private
 	 * @param string $core_name
 	 * @param string $content_name
@@ -262,27 +258,27 @@ class WPInstall {
 	private function create_wp_config($destDir, $core_name, $content_name, $upload_name) {
 		$this->log("Creating wp-config");
 		// get wp-config-sample
-		$wp_config = file_get_contents(WPInstall::RootDir.DIRECTORY_SEPARATOR."_wp-config-SAMPLE.php");
-		
+		$wp_config = file_get_contents(WPInstall::RootDir . DIRECTORY_SEPARATOR . "_wp-config-SAMPLE.php");
+
 		// change core and content path
 		$wp_config = str_replace("{{WP_CORE_DIR}}", $core_name, $wp_config);
 		$wp_config = str_replace("{{CONTENT_DIR}}", $content_name, $wp_config);
 		$wp_config = str_replace("{{UPLOAD_DIR}}", $upload_name, $wp_config);
-		if ($upload_name != $content_name.'/uploads') {
+		if ($upload_name != $content_name . '/uploads') {
 			$wp_config = str_replace("{{USE_UPLOAD_DIR}}", 'true', $wp_config);
 		} else {
 			$wp_config = str_replace("{{USE_UPLOAD_DIR}}", 'false', $wp_config);
 		}
-		
+
 		// write file
-		$this->write_to_file($destDir.DIRECTORY_SEPARATOR."wp-config.php", $wp_config);
+		$this->write_to_file($destDir . DIRECTORY_SEPARATOR . "wp-config.php", $wp_config);
 
 		$this->hr();
 	}
 
 	/**
 	 * Download a new set of security keys from the wordpress.org API
-	 * 
+	 *
 	 * @access private
 	 * @return string
 	 */
@@ -293,7 +289,7 @@ class WPInstall {
 		$sec_keys = curl_exec($this->curl);
 
 		if (!$sec_keys) {
-			$this->error("notice: ".curl_error($this->curl));
+			$this->error("notice: " . curl_error($this->curl));
 			die();
 		}
 
@@ -302,21 +298,21 @@ class WPInstall {
 
 	/**
 	 * Display info about the predicted runtime for our defaults of "dev", "local", "staging" and "preview"
-	 * 
+	 *
 	 * @return void
 	 */
 	private function runtime_info() {
 		switch (true) {
-			case stristr($_SERVER['SERVER_NAME'], "dev"):
-			case stristr($_SERVER['SERVER_NAME'], "local"):
-				$current_rt = "local";
-				break;
-			case stristr($_SERVER['SERVER_NAME'], "staging"):
-			case stristr($_SERVER['SERVER_NAME'], "preview"):
-				$current_rt = "staging";
-				break;
-			default:
-				$current_rt = "live";
+		case stristr($_SERVER['SERVER_NAME'], "dev"):
+		case stristr($_SERVER['SERVER_NAME'], "local"):
+			$current_rt = "local";
+			break;
+		case stristr($_SERVER['SERVER_NAME'], "staging"):
+		case stristr($_SERVER['SERVER_NAME'], "preview"):
+			$current_rt = "staging";
+			break;
+		default:
+			$current_rt = "live";
 		}
 		$this->debug("Current runtime is '" . $current_rt . "'");
 	}
@@ -332,7 +328,7 @@ class WPInstall {
 
 	/**
 	 * handle the runtime config creation.
-	 * 
+	 *
 	 * @param string $destDir
 	 * @param array $runtimes
 	 * @return string
@@ -340,24 +336,24 @@ class WPInstall {
 	private function create_wp_environments($destDir, $runtimes) {
 		$this->log("Creating runtimes:");
 		// load local runtime template
-		$template = file_get_contents(WPInstall::RootDir.DIRECTORY_SEPARATOR."_wp-config-ENV-SAMPLE.php");
+		$template = file_get_contents(WPInstall::RootDir . DIRECTORY_SEPARATOR . "_wp-config-ENV-SAMPLE.php");
 
 		$else = '';
 		foreach ($runtimes as $rt_name) {
 			// switch case for wp-config
-			$else .= "\n\t".'case host_contains("'.$rt_name.'"): '."\n\t\t".'$runtime_env = "'.$rt_name.'"; '."\n\t\t".'break; ';
+			$else .= "\n\t" . 'case host_contains("' . $rt_name . '"): ' . "\n\t\t" . '$runtime_env = "' . $rt_name . '"; ' . "\n\t\t" . 'break; ';
 
 			// create wp-config-runtime
 			$this->log("Creating runtime config: " . $rt_name);
 			// replace strings and write file
 			$rt_file_content = str_replace("// {{SECURITY_KEYS}}", $this->get_sec_keys(), $template);
-			$rt_file_content = str_replace("local_", $rt_name.'_', $rt_file_content);
-			$rt_file_content = str_replace('{{TABLE_PREFIX}}', WPInstall::create_table_prefix().'_', $rt_file_content);
+			$rt_file_content = str_replace("local_", $rt_name . '_', $rt_file_content);
+			$rt_file_content = str_replace('{{TABLE_PREFIX}}', WPInstall::create_table_prefix() . '_', $rt_file_content);
 
-			$this->write_to_file($destDir.DIRECTORY_SEPARATOR."wp-config-".$rt_name.".php",
-			                     $rt_file_content);
+			$this->write_to_file($destDir . DIRECTORY_SEPARATOR . "wp-config-" . $rt_name . ".php",
+				$rt_file_content);
 		}
-		
+
 		return $else;
 	}
 
@@ -370,12 +366,12 @@ class WPInstall {
 	 * @return bool
 	 */
 	private function core_exists($destDir, $core_name) {
-		return file_exists($destDir.DIRECTORY_SEPARATOR.$core_name);
+		return file_exists($destDir . DIRECTORY_SEPARATOR . $core_name);
 	}
 
 	/**
 	 * Write a template file with given data
-	 * 
+	 *
 	 * @param string $src       Source file
 	 * @param string $dest      Destionation file
 	 * @param array $data       Array with search => replacement values
@@ -391,21 +387,20 @@ class WPInstall {
 
 	/**
 	 * download the Wordpress core
-	 * 
+	 *
 	 * @param string $url
 	 * @param string $core_name
 	 * @param string $destDir
 	 * @return void
 	 */
 	private function download_core($url, $core_name, $destDir) {
-		$wordpressDir = $destDir.DIRECTORY_SEPARATOR.$core_name;
+		$wordpressDir = $destDir . DIRECTORY_SEPARATOR . $core_name;
 
 		if ($this->core_exists($destDir, $core_name)) {
 			// TODO how and when will this cache be invalidated
 			$this->notice("Skipping core download, Wordpress already exists...");
 			$this->hr();
-		}
-		else {
+		} else {
 			$zip_tmp = tempnam(sys_get_temp_dir(), "zip");
 			$zip_res = fopen($zip_tmp, "w");
 
@@ -414,13 +409,12 @@ class WPInstall {
 			curl_setopt($this->curl, CURLOPT_FRESH_CONNECT, false);
 			curl_setopt($this->curl, CURLOPT_SSL_VERIFYPEER, 0);
 			curl_setopt($this->curl, CURLOPT_FILE, $zip_res);
-			$this->log("Start download from ". $url);
+			$this->log("Start download from " . $url);
 
 			if (!curl_exec($this->curl)) {
-				$this->error("cURL: The language code is probably at fault for this...<br>".curl_error($this->curl));
+				$this->error("cURL: The language code is probably at fault for this...<br>" . curl_error($this->curl));
 				die();
-			}
-			else {
+			} else {
 				$zip = new ZipArchive;
 				$this->log("Start unzipping core");
 				if ($zip->open($zip_tmp)) {
@@ -428,12 +422,11 @@ class WPInstall {
 					$zip->close();
 
 					// rename core dir as wished
-					if (!rename($destDir.DIRECTORY_SEPARATOR."wordpress", $wordpressDir)) {
+					if (!rename($destDir . DIRECTORY_SEPARATOR . "wordpress", $wordpressDir)) {
 						$this->error("notice: unable to rename core folder");
 					}
 					$this->hr();
-				}
-				else {
+				} else {
 					$this->error("notice: Unable to open zip File");
 				}
 			}
@@ -458,8 +451,7 @@ class WPInstall {
 			if ($item->isDir()) {
 				/* @var RecursiveDirectoryIterator $iterator */
 				mkdir($dest . DIRECTORY_SEPARATOR . $iterator->getSubPathName());
-			}
-			else {
+			} else {
 				copy($item, $dest . DIRECTORY_SEPARATOR . $iterator->getSubPathName());
 			}
 		}
