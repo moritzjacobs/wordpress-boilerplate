@@ -56,13 +56,13 @@ SetEnv WP_SERVER_ENVIRONMENT env
 ## changelog
 
 ### 1.3.0
-- https is a default now
-- changed defaults to my liking. Yes, I do that.
+- moved from bower to npm
+- forced-https is a default now
+- improved config defaults for installation
 - improved and cleaned up .htaccess template
-- improved wp-config-creation
+- improved wp-config-creation routine
 - fixed string replacement in template compilation
 - refactored the core class
-- better comments
 
 ### 1.2.1
 - little stuff and tests
