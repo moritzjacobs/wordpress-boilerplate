@@ -20,7 +20,7 @@ require_once './lib/WPInstall.php'
 			<h2>Instructions</h2>
 			<ol>
 				<li>Customize settings and run installer</li>
-				<li>Then delete <code>_install.php</code>, <code>_wp-config-ENV-SAMPLE.php</code> and <code>wp-config-SAMPLE.php</code></li>
+				<li>Then delete this installer directory!</li>
 				<li>Double check <code>wp-config.php</code> and edit your runtime configs</li>
 				<li>Continue with the usual wordpress install in <code>http://your-host/install.php</code></li>
 			</ol>
@@ -36,8 +36,9 @@ require_once './lib/WPInstall.php'
 					<div class="form-group">
 						<label for="lang">Language code (e.g. en or de)</label>
 						<select class="form-control" name="lang">
+							<option value="de_DE_formal">German (formal)</option>
+							<option value="de_DE">German (informal)</option>
 							<option value="en">English (American)</option>
-							<option value="de_DE">German</option>
 							<option value="af">Afrikaans</option>
 							<option value="ak">Akan</option>
 							<option value="sq">Albanian</option>
@@ -205,20 +206,20 @@ require_once './lib/WPInstall.php'
 						<input type="text" id="version" class="form-control" value="latest" name="version" placeholder="4.4.4">
 					</div>
 					<div class="form-group">
-						<label for="core_dir">Core dir name (default 'core')</label>
+						<label for="core_dir">Core dir name</label>
 						<input type="text" id="core_dir" class="form-control" value="core" name="core_dir" placeholder="use default: core">
 					</div>
 					<div class="form-group">
-						<label for="content_dir">content dir (default 'wp-content')</label>
-						<input type="text" id="content_dir" class="form-control" value="wp-content" name="content_dir" placeholder="use default: wp-content">
+						<label for="content_dir">content dir</label>
+						<input type="text" id="content_dir" class="form-control" value="site" name="content_dir" placeholder="use default: site">
 					</div>
 					<div class="form-group">
-						<label for="upload_dir">upload dir (default 'wp-content/uploads')</label>
-						<input type="text" id="upload_dir" class="form-control" value="" name="upload_dir" placeholder="use default: wp-content/uploads">
+						<label for="upload_dir">upload dir</label>
+						<input type="text" id="upload_dir" class="form-control" value="file" name="upload_dir" placeholder="use default: file">
 					</div>
 					<div class="form-group">
-						<label for="runtimes">additional runtime environments (comma separated)</label>
-						<input type="text" class="form-control" value="" name="runtimes" placeholder="staging, preproduction">
+						<label for="runtimes">runtime environments (comma separated)</label>
+						<input type="text" class="form-control" value="local, staging, live" name="runtimes" placeholder="use default: local, staging, live">
 					</div>
 
 					<button class="btn btn-primary" type="submit" name="go" value="go">Click here to start the installation</button>
