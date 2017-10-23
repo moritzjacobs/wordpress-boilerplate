@@ -1,15 +1,10 @@
-<?php get_header(); ?>
+<h2>Config test:</h2>
+<hr>
+<pre>
 
-<?php if (have_posts()) : ?>
-	<?php while ( have_posts() ) : the_post(); ?>
-		
-		<?php get_template_part('content'); ?>
-	
-	<?php endwhile; // end of the loop. ?>
-	
-	<?php wp_reset_postdata(); ?>
-<?php else : ?>
-	no post found
-<?php endif; ?>
+<b>site_url:</b> <?php echo site_url(); ?><br>
+<b>home_url:</b> <?php echo home_url(); ?><br>
+<b>wp_upload_dir:</b> <?php var_dump(wp_upload_dir()); ?>
+<b>get_stylesheet_directory_uri:</b> <?php echo get_stylesheet_directory_uri(); ?>
 
-<?php get_footer(); ?>
+</pre>

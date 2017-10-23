@@ -4,19 +4,20 @@ This is a boilerplate and installation script for Wordpress with the WP core as 
 
 
 ### Assumptions
-- You want to have different runtime environments for development and production.
-- You want a better folder structure for your Wordpress installs.
-- You want to automate those tedious setup steps
+- You want to have multiple runtime environments for development and production.
+- You want a better folder structure for your Wordpress installation
+- You want to automate some setup steps
+- you want to use https on your site
 
 
 ### Running the installer will…
 - Download and unpack the current stable Wordpress core in your language of choice
+- Migrate the language files from core
 - Rename the `core` and `wp-content` folders
 - Create an `uploads` folder outside of wp-content
-- Set up at least two runtime environment configurations (local and live). Those will be detected based on your host name. eg. `your_host.dev`, `stage.domain.com`
+- Set up at least two runtime environment configurations (local and live). Those will be detected based on your host name. eg. `dev.domain.com`, `stage.domain.com` (change the resulting `wp-config.php` if necessary)
 - Create a random DB prefix
 - Create fresh secret keys for each runtime environment.
-- Migrate the language files from core
 - Install a couple of MU-Plugins
 
 
@@ -53,6 +54,15 @@ SetEnv WP_SERVER_ENVIRONMENT env
 ```
 
 ## changelog
+
+### 1.3.0
+- moved from bower to npm
+- forced-https is a default now
+- improved config defaults for installation
+- improved and cleaned up .htaccess template
+- improved wp-config-creation routine
+- fixed string replacement in template compilation
+- refactored the core class
 
 ### 1.2.1
 - little stuff and tests

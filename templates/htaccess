@@ -1,0 +1,341 @@
+# ----------------------------------------------------------------------
+# 301 REWRITES
+# ----------------------------------------------------------------------
+
+#<IfModule mod_rewrite.c>
+# RewriteEngine On
+# Redirect 301 /old-url /new-url
+#</IfModule>
+
+# ----------------------------------------------------------------------
+# Redirect /admin and /login
+# ----------------------------------------------------------------------
+
+<IfModule mod_rewrite.c>
+	RewriteRule ^admin/?$ /{{CORE_DIR_NAME}}/wp-admin/ [R,L]
+	RewriteRule ^login/?$ /{{CORE_DIR_NAME}}/wp-login.php [R,L]
+	RewriteRule ^{{CORE_DIR_NAME}}/?$ /{{CORE_DIR_NAME}}/wp-admin/ [R,L]
+	RewriteRule ^wp-admin/?$ /404 [R,L]
+</IfModule>
+
+# ----------------------------------------------------------------------
+# Force SSL
+# ----------------------------------------------------------------------
+<IfModule mod_rewrite.c>
+	RewriteEngine On
+	RewriteCond %{SERVER_PORT} !^443$
+	RewriteRule (.*) https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
+</IfModule>
+
+# ----------------------------------------------------------------------
+# UTF-8 encoding
+# ----------------------------------------------------------------------
+# Use UTF-8 encoding for anything served text/plain or text/html
+AddDefaultCharset utf-8
+
+# Force UTF-8 for a number of file formats
+AddCharset utf-8 .css .js .xml .json .rss .atom
+
+# ----------------------------------------------------------------------
+# Cross-domain AJAX requests
+# ----------------------------------------------------------------------
+# Serve cross-domain Ajax requests, disabled by default.
+# enable-cors.org
+# code.google.com/p/html5security/wiki/CrossOriginRequestSecurity
+#	<IfModule mod_headers.c>
+#	Header set Access-Control-Allow-Origin "*"
+#	</IfModule>
+
+# ----------------------------------------------------------------------
+# Stop search engines from indexing different files
+# ----------------------------------------------------------------------
+<FilesMatch "\.(txt|log|xml|css|js|gz)$">
+	Header set X-Robots-Tag "noindex"
+</FilesMatch>
+
+# ----------------------------------------------------------------------
+# Gzip compression
+# ----------------------------------------------------------------------
+<IfModule mod_deflate.c>
+	AddOutputFilterByType DEFLATE text/plain
+	AddOutputFilterByType DEFLATE text/html
+	AddOutputFilterByType DEFLATE text/xml
+	AddOutputFilterByType DEFLATE text/css
+	AddOutputFilterByType DEFLATE text/vtt 
+	AddOutputFilterByType DEFLATE text/x-component
+	AddOutputFilterByType DEFLATE application/xml
+	AddOutputFilterByType DEFLATE application/xhtml+xml
+	AddOutputFilterByType DEFLATE application/rss+xml
+	AddOutputFilterByType DEFLATE application/js
+	AddOutputFilterByType DEFLATE application/javascript
+	AddOutputFilterByType DEFLATE application/x-javascript
+	AddOutputFilterByType DEFLATE application/x-httpd-php
+	AddOutputFilterByType DEFLATE application/x-httpd-fastphp
+	AddOutputFilterByType DEFLATE application/atom+xml 
+	AddOutputFilterByType DEFLATE application/json
+	AddOutputFilterByType DEFLATE application/ld+json 
+	AddOutputFilterByType DEFLATE application/vnd.ms-fontobject 
+	AddOutputFilterByType DEFLATE application/x-font-ttf 
+	AddOutputFilterByType DEFLATE application/x-web-app-manifest+json 
+	AddOutputFilterByType DEFLATE font/opentype 
+	AddOutputFilterByType DEFLATE image/svg+xml
+	AddOutputFilterByType DEFLATE image/x-icon 
+
+	# Exception: Images
+	SetEnvIfNoCase REQUEST_URI \.(?:gif|jpg|jpeg|png)$ no-gzip dont-vary
+
+	# Drop problematic browsers
+	BrowserMatch ^Mozilla/4 gzip-only-text/html
+	BrowserMatch ^Mozilla/4\.0[678] no-gzip
+	BrowserMatch \bMSI[E] !no-gzip !gzip-only-text/html
+
+	# Make sure proxies don't deliver the wrong content
+	Header append Vary User-Agent env=!dont-vary
+</IfModule>
+
+# ----------------------------------------------------------------------
+# Expires headers (for better cache control)
+# ----------------------------------------------------------------------
+
+# Serve resources with far-future expires headers.
+#
+# (!) If you don't control versioning with filename-based
+# cache busting, you should consider lowering the cache times
+# to something like one week.
+#
+# https://httpd.apache.org/docs/current/mod/mod_expires.html
+<IfModule mod_expires.c>
+	ExpiresActive on
+	ExpiresDefault "access plus 1 month"
+
+	# CSS
+	ExpiresByType text/css "access plus 1 year"
+
+	# Data interchange
+	ExpiresByType application/atom+xml "access plus 1 hour"
+	ExpiresByType application/rdf+xml "access plus 1 hour"
+	ExpiresByType application/rss+xml "access plus 1 hour"
+	ExpiresByType application/json "access plus 0 seconds"
+	ExpiresByType application/ld+json "access plus 0 seconds"
+	ExpiresByType application/schema+json "access plus 0 seconds"
+	ExpiresByType application/vnd.geo+json "access plus 0 seconds"
+	ExpiresByType application/xml "access plus 0 seconds"
+	ExpiresByType text/xml "access plus 0 seconds"
+
+	# Favicon (cannot be renamed!) and cursor images
+	ExpiresByType image/vnd.microsoft.icon "access plus 1 week"
+	ExpiresByType image/x-icon "access plus 1 week"
+
+	# HTML
+	ExpiresByType text/html "access plus 0 seconds"
+
+	# JavaScript
+	ExpiresByType application/javascript "access plus 1 year"
+	ExpiresByType application/x-javascript "access plus 1 year"
+	ExpiresByType text/javascript "access plus 1 year"
+
+
+	# Manifest files
+	ExpiresByType application/manifest+json "access plus 1 week"
+	ExpiresByType application/x-web-app-manifest+json "access plus 0 seconds"
+	ExpiresByType text/cache-manifest "access plus 0 seconds"
+
+	# Media files
+	ExpiresByType audio/ogg "access plus 1 month"
+	ExpiresByType image/bmp "access plus 1 month"
+	ExpiresByType image/gif "access plus 1 month"
+	ExpiresByType image/jpeg "access plus 1 month"
+	ExpiresByType image/png "access plus 1 month"
+	ExpiresByType image/svg+xml "access plus 1 month"
+	ExpiresByType image/webp "access plus 1 month"
+	ExpiresByType video/mp4 "access plus 1 month"
+	ExpiresByType video/ogg "access plus 1 month"
+	ExpiresByType video/webm "access plus 1 month"
+
+
+	## Web fonts
+	# Embedded OpenType (EOT)
+	ExpiresByType application/vnd.ms-fontobject "access plus 1 month"
+	ExpiresByType font/eot "access plus 1 month"
+
+	# OpenType
+	ExpiresByType font/opentype "access plus 1 month"
+
+	# TrueType
+	ExpiresByType application/x-font-ttf "access plus 1 month"
+
+	# Web Open Font Format (WOFF) 1.0
+	ExpiresByType application/font-woff "access plus 1 month"
+	ExpiresByType application/x-font-woff "access plus 1 month"
+	ExpiresByType font/woff "access plus 1 month"
+
+	# Web Open Font Format (WOFF) 2.0
+	ExpiresByType application/font-woff2 "access plus 1 month"
+
+
+	# Other
+	ExpiresByType text/x-cross-domain-policy "access plus 1 week"
+
+</IfModule>
+
+# ----------------------------------------------------------------------
+# ETag removal
+# ----------------------------------------------------------------------
+
+# FileETag None is not enough for every server.
+<IfModule mod_headers.c>
+	Header unset ETag
+</IfModule>
+
+# Since we're sending far-future expires, we don't need ETags for
+# static content.
+#	 developer.yahoo.com/performance/rules.html#etags
+FileETag None
+
+# ----------------------------------------------------------------------
+# Start rewrite engine
+# ----------------------------------------------------------------------
+# Turning on the rewrite engine is necessary for the following rules and features.
+# FollowSymLinks must be enabled for this to work.
+#
+# Some cloud hosting services require RewriteBase to be set: goo.gl/HOcPN
+# If using the h5bp in a subdirectory, use `RewriteBase /foo` instead where 'foo' is your directory.
+<IfModule mod_rewrite.c>
+	Options +FollowSymlinks
+	RewriteEngine On
+	# RewriteBase /
+</IfModule>
+
+# ----------------------------------------------------------------------
+# Misc. security
+# ----------------------------------------------------------------------
+# without -MultiViews, Apache will give a 404 for a rewrite if a folder of the same name does not exist
+#	 e.g. /blog/hello : webmasterworld.com/apache/3808792.htm
+Options -MultiViews
+
+# "-Indexes" will have Apache block users from browsing folders without a default document
+# Usually you should leave this activated, because you shouldn't allow everybody to surf through
+# every folder on your server (which includes rather private places like CMS system folders).
+<IfModule mod_autoindex.c>
+	Options -Indexes
+</IfModule>
+
+# Block access to "hidden" directories whose names begin with a period. This
+# includes directories used by version control systems such as Subversion or Git.
+<IfModule mod_rewrite.c>
+	RewriteCond %{SCRIPT_FILENAME} -d
+	RewriteCond %{SCRIPT_FILENAME} -f
+	RewriteRule "(^|/)\." - [F]
+</IfModule>
+
+# Block access to backup and source files
+# This files may be left by some text/html editors and
+# pose a great security danger, when someone can access them
+<FilesMatch "(\.(bak|config|sql|fla|psd|ini|log|sh|inc|swp|dist)|~)$">
+	Order allow,deny
+	Deny from all
+	Satisfy All
+</FilesMatch>
+
+# PROTECT all htaccess files
+<Files ~ "^[\._]ht">
+	Order allow,deny
+	Deny from all
+	Satisfy All
+</Files>
+
+# PROTECT wp-configs
+<Files ~ "^_?wp-config">
+	Order allow,deny
+	Deny from all
+	Satisfy all
+</files>
+
+# PROTECT readme
+<Files ~ "^(readme|README)">
+	Order allow,deny
+	Deny from all
+	Satisfy all
+</Files>
+
+# PROTECT composer
+<Files ~ "^composer">
+	Order allow,deny
+	Deny from all
+	Satisfy all
+</Files>
+
+# PROTECT dot files
+<Files ~ "^\.">
+	Order allow,deny
+	Deny from all
+	Satisfy all
+</files>
+
+# Restrict php file execution in uploads folder
+# <Directory "{{UPLOAD_DIR_PATH}}">
+#	<Files "*.php">
+#		Order Deny,Allow
+#		Deny from All
+#	</Files>
+# </Directory>
+
+# PROTECT against user enumeration
+RewriteEngine On
+RewriteCond %{QUERY_STRING} author=d
+RewriteRule ^ /? [L,R=301]
+
+# PROTECT against script injections
+Options +FollowSymLinks
+RewriteEngine On
+RewriteCond %{QUERY_STRING} (<|%3C).*script.*(>|%3E) [NC,OR]
+RewriteCond %{QUERY_STRING} GLOBALS(=|[|%[0-9A-Z]{0,2}) [OR]
+RewriteCond %{QUERY_STRING} _REQUEST(=|[|%[0-9A-Z]{0,2})
+RewriteRule ^(.*)$ index.php [F,L]
+
+# PROTECT wp-includes folder
+<IfModule mod_rewrite.c>
+	RewriteEngine On
+	RewriteBase /
+	RewriteRule ^{{CORE_DIR_NAME}}/wp-admin/includes/ - [F,L]
+	RewriteRule !^{{CORE_DIR_NAME}}/wp-includes/ - [S=3]
+	RewriteRule ^{{CORE_DIR_NAME}}/wp-includes/[^/]+\.php$ - [F,L]
+	RewriteRule ^{{CORE_DIR_NAME}}/wp-includes/js/tinymce/langs/.+\.php - [F,L]
+	RewriteRule ^{{CORE_DIR_NAME}}/wp-includes/theme-compat/ - [F,L]
+</IfModule>
+
+# ----------------------------------------------------------------------
+# Block access to "hidden" directories whose names begin with a period. This
+# includes directories used by version control systems such as Subversion or Git.
+# ----------------------------------------------------------------------
+<IfModule mod_rewrite.c>
+	RewriteCond %{SCRIPT_FILENAME} -d
+	RewriteCond %{SCRIPT_FILENAME} -f
+	RewriteRule "(^|/)\." - [F]
+</IfModule>
+
+# ----------------------------------------------------------------------
+# Block access to backup and source files
+# ----------------------------------------------------------------------
+# This files may be left by some text/html editors and
+# pose a great security danger, when someone can access them
+<FilesMatch "(\.(bak|config|sql|fla|psd|ini|log|sh|inc|swp|dist)|~)$">
+	Order allow,deny
+	Deny from all
+	Satisfy All
+</FilesMatch>
+
+# ----------------------------------------------------------------------
+# Wordpress boilerplate, do not change!
+# ----------------------------------------------------------------------
+
+# BEGIN WordPress
+<IfModule mod_rewrite.c>
+	RewriteEngine On
+	RewriteBase /
+	RewriteRule ^index\.php$ - [L]
+	RewriteCond %{REQUEST_FILENAME} !-f
+	RewriteCond %{REQUEST_FILENAME} !-d
+	RewriteRule . /index.php [L]
+</IfModule>
+# END WordPress

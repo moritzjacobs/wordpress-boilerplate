@@ -1,3 +1,5 @@
+@import url("marx.min.css");
+
 body {
 	color: #666;
 	padding: 20px 30px;
@@ -13,9 +15,22 @@ body {
 	display: block;
 }
 
-@-moz-keyframes spinner { 100% { -moz-transform: rotate(360deg); } }
-@-webkit-keyframes spinner { 100% { -webkit-transform: rotate(360deg); } }
-@keyframes spinner { 100% { -webkit-transform: rotate(360deg); transform:rotate(360deg); } }
+@-moz-keyframes spinner {
+	100% {
+		-moz-transform: rotate(360deg);
+	}
+}
+@-webkit-keyframes spinner {
+	100% {
+		-webkit-transform: rotate(360deg);
+	}
+}
+@keyframes spinner {
+	100% {
+		-webkit-transform: rotate(360deg);
+		transform: rotate(360deg);
+	}
+}
 
 .spinner:after {
 	display: none;
@@ -37,6 +52,6 @@ body {
 	margin-top: 50px;
 }
 
-input[type=submit] {
-	width:
+input[type="submit"] {
+	width: ;
 }
