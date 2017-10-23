@@ -1,11 +1,16 @@
 <?php
 /*
 Plugin Name: WP_Server_Environment in Admin Bar
-Plugin URI: 
+Plugin URI:
 Description: Shows a color coded status of the active server environment in the Wordpress Admin Bar. To use this plugin, you need to add a constant named <code>WP_SERVER_ENVIRONMENT</code> to your <code>wp-config.php</code> file, with one of the following values: <code>local</code>, <code>staging</code>, <code>live</code>
-Version: 1.0.1
+Version: 1.1.0
 Author: Neonpastell GmbH
 Author URI: http://www.neonpastell.de
+*/
+
+
+/**
+* to show for all users, add filter: add_filter( 'npwp_env_admin_bar_capabilities', '__return_true');
 */
 
 if ( ! class_exists( 'NPWP_ENV_Admin_Bar' ) && defined('WP_SERVER_ENVIRONMENT') ) :
@@ -39,47 +44,51 @@ class NPWP_ENV_Admin_Bar {
 	public static function _add_actions() {
 		add_action( 'admin_bar_menu', array( __CLASS__, 'npwp_env_in_admin_bar'), 10); // 10|15|25|100
 		add_action( 'admin_head', array( __CLASS__, 'npwp_env_in_admin_bar_colorize') ); // add styles to admin head
-		add_action( 'wp_head', array( __CLASS__, 'npwp_env_in_admin_bar_colorize') ); // add styles to frontend	
+		add_action( 'wp_head', array( __CLASS__, 'npwp_env_in_admin_bar_colorize') ); // add styles to frontend
 	}
 
 	public static function npwp_env_in_admin_bar( $wp_admin_bar ) {
-		if ( current_user_can( 'manage_options' ) && is_admin_bar_showing() ) {
+		$user_rights = apply_filters( 'npwp_env_admin_bar_capabilities', current_user_can( 'manage_options' ));
+
+		if ( $user_rights && is_admin_bar_showing() ) {
 			$args = array(
 				'id'    => 'wpnp-env',
 				'title' => '' . strtoupper(WP_SERVER_ENVIRONMENT),
-				//'parent' => 'top-secondary',
 				'html' => 'div',
 				'href'  => get_admin_url(),
 				'meta'  => array( 'title' => 'WP_SERVER_ENVIRONMENT: ' . WP_SERVER_ENVIRONMENT )
 			);
 			$wp_admin_bar->add_node( $args );
+			do_action( 'npwp_env_admin_bar', $wp_admin_bar );
 		}
 	}
 
 
 	public static function npwp_env_in_admin_bar_colorize() {
-		if ( current_user_can( 'manage_options' ) && is_admin_bar_showing() ) {
+		$user_rights = apply_filters( 'npwp_env_admin_bar_capabilities', current_user_can( 'manage_options' ));
+
+		if ( $user_rights && is_admin_bar_showing() ) {
 			// add color to env menu
 			echo '<style type="text/css">
 				#wpadminbar { box-sizing: border-box; }
 				#wpadminbar #wp-admin-bar-wpnp-env > .ab-item { color: #eee; }
 				#wpadminbar #wp-admin-bar-wpnp-env > .ab-item:before {
 					position: relative;
-				    float: left;
-				    font: 400 20px/1 dashicons;
-				    speak: none;
-				    padding: 4px 0;
-				    -webkit-font-smoothing: antialiased;
-				    -moz-osx-font-smoothing: grayscale;
-				    background-image: none!important;
-				    margin-right: 6px;
-				    color: #a0a5aa;
-				    color: rgba(240,245,250,.6);
-				    position: relative;
-				    -webkit-transition: all .1s ease-in-out;
-				    transition: all .1s ease-in-out;
-				    content: "\f325";
-    				top: 2px;
+					float: left;
+					font: 400 20px/1 dashicons;
+					speak: none;
+					padding: 4px 0;
+					-webkit-font-smoothing: antialiased;
+					-moz-osx-font-smoothing: grayscale;
+					background-image: none!important;
+					margin-right: 6px;
+					color: #a0a5aa;
+					color: rgba(240,245,250,.6);
+					position: relative;
+					-webkit-transition: all .1s ease-in-out;
+					transition: all .1s ease-in-out;
+					content: "\f325";
+					top: 2px;
 				}
 			</style>';
 
