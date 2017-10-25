@@ -3,56 +3,40 @@
 Plugin Name: Sanitize Uploads
 Plugin URI:
 Description: Sanitizes all filenames on upload
-Version: 1.0.1
+Version: 1.1.0
 Author: Neonpastell GmbH
+Contributors: Yeah GbR
 Author URI: http://www.neonpastell.de
-*/
+ */
 
-if ( ! class_exists( 'NPWP_Sanitize_uploads' ) ) :
+add_filter('sanitize_file_name', 'npwp_sanitize_filename_on_upload', 10);
 
-class NPWP_Sanitize_uploads {
+function npwp_sanitize_filename_on_upload($filename) {
+	$pathinfo = pathinfo($filename);
+	$ext = $pathinfo["extension"];
+	$name = $pathinfo["filename"];
 
-	public static function get_instance() {
-		static $instance = null;
-
-		if ( null === $instance ) {
-			$instance = new self();
-			add_filter('sanitize_file_name', array( __CLASS__, 'sanitize_filename_on_upload'), 10);
-		}
-
-		return $instance;
-	}
-
-	/**
-	 * An empty constructor
-	 */
-	public function __construct() { /* Purposely do nothing here */ }
-
-	public static function sanitize_filename_on_upload($filename) {
-		$explodedFilename = explode('.', $filename);
-		$ext = end($explodedFilename);
-		// Replace all special characters
-		$replace = array(
-			' ' => '_',
-			'Ä' => 'Ae',
-			'Ö' => 'Oe',
-			'Ü' => 'Ue',
-			'ä' => 'ae',
-			'ö' => 'oe',
-			'ü' => 'ue',
-			'ß' => 'ss'
-		);
-		$sanitized = strtr(substr($filename, 0, -(strlen($ext)+1)), $replace);
-		// Replace all other weird characters
-		$sanitized = preg_replace('/[^a-zA-Z0-9-_.]/', '', $sanitized);
-		// Replace dots inside filename
-		$sanitized = str_replace('.','-', $sanitized);
-		return strtolower($sanitized.'.'.$ext);
-	}
-
+	// Replace all special characters
+	$replace = array(
+		' ' => '_',
+		'Ä' => 'Ae',
+		'Ö' => 'Oe',
+		'Ü' => 'Ue',
+		'ä' => 'ae',
+		'ö' => 'oe',
+		'ü' => 'ue',
+		'Ä' => 'Ae',
+		'Ö' => 'Oe',
+		'Ü' => 'Ue',
+		'ä' => 'ae',
+		'ö' => 'oe',
+		'ü' => 'ue',
+		'ß' => 'ss',
+	);
+	$sanitized = strtr($name, $replace);
+	// Replace all other weird characters
+	$sanitized = preg_replace('/[^a-zA-Z0-9-_.]/', '', $sanitized);
+	// Replace dots inside filename
+	$sanitized = str_replace('.', '-', $sanitized);
+	return strtolower($sanitized . '.' . $ext);
 }
-
-
-NPWP_Sanitize_uploads::get_instance();
-
-endif;
