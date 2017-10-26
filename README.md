@@ -15,7 +15,7 @@ This is a boilerplate and installation script for Wordpress with the WP core as 
 - Migrate the language files from core
 - Rename the `core` and `wp-content` folders
 - Create an `uploads` folder outside of wp-content
-- Set up at least two runtime environment configurations (local and live). Those will be detected based on your host name. eg. `dev.domain.com`, `stage.domain.com` (change the resulting `wp-config.php` if necessary)
+- Set runtime environment configurations.
 - Create a random DB prefix
 - Create fresh secret keys for each runtime environment.
 - Install a couple of MU-Plugins
@@ -57,6 +57,7 @@ SetEnv WP_SERVER_ENVIRONMENT env
 
 ### 1.3.0
 - moved from bower to npm
+- simplified the mu-plugins
 - forced-https is a default now
 - improved config defaults for installation
 - improved and cleaned up .htaccess template
