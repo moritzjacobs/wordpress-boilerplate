@@ -13,7 +13,7 @@ add_filter('sanitize_file_name', 'npwp_sanitize_filename_on_upload', 10);
 
 function npwp_sanitize_filename_on_upload($filename) {
 	$pathinfo = pathinfo($filename);
-	$ext = $pathinfo["extension"];
+	$ext = empty($pathinfo["extension"]) ? "" : $pathinfo["extension"];
 	$name = $pathinfo["filename"];
 
 	// Replace all special characters
