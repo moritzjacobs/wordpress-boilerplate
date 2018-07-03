@@ -4,7 +4,6 @@ node_modules
 .sass-cache
 *.scssc
 .grunt
-logs
 *.log
 *.map
 
