@@ -13,7 +13,7 @@ add_filter('sanitize_file_name', 'npwp_sanitize_filename_on_upload', 10);
 
 function npwp_sanitize_filename_on_upload($filename) {
 	$pathinfo = pathinfo($filename);
-	$ext = empty($pathinfo["extension"]) ? "" : $pathinfo["extension"];
+	$ext = empty($pathinfo["extension"]) ? "" : "." . $pathinfo["extension"];
 	$name = $pathinfo["filename"];
 
 	// Replace all special characters
@@ -38,5 +38,5 @@ function npwp_sanitize_filename_on_upload($filename) {
 	$sanitized = preg_replace('/[^a-zA-Z0-9-_.]/', '', $sanitized);
 	// Replace dots inside filename
 	$sanitized = str_replace('.', '-', $sanitized);
-	return strtolower($sanitized . '.' . $ext);
+	return strtolower($sanitized . $ext);
 }
