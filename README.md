@@ -55,6 +55,9 @@ SetEnv WP_SERVER_ENVIRONMENT env
 
 ## changelog
 
+### 1.3.1
+- fix environment fallbacks 
+
 ### 1.3.0
 - moved from bower to npm
 - simplified the mu-plugins
