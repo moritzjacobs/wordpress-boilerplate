@@ -21,12 +21,14 @@ if (file_exists(__DIR__ . '/wp-config-environment.php')) {
 	require_once __DIR__ . '/wp-config-environment.php';
 }
 
-if (!defined('WP_SERVER_ENVIRONMENT') && isset($_SERVER['WP_SERVER_ENVIRONMENT'])) {
-	// If not set, try an environment variable WP_SERVER_ENVIRONMENT
-	define('WP_SERVER_ENVIRONMENT', $_SERVER['WP_SERVER_ENVIRONMENT']);
-} else {
-	// Use 'local' as fallback
-	define('WP_SERVER_ENVIRONMENT', 'local');
+if (!defined('WP_SERVER_ENVIRONMENT')) {
+	if (isset($_SERVER['WP_SERVER_ENVIRONMENT'])) {
+		// If not set, try an environment variable WP_SERVER_ENVIRONMENT
+		define('WP_SERVER_ENVIRONMENT', $_SERVER['WP_SERVER_ENVIRONMENT']);
+	} else {
+		// Use 'local' as fallback
+		define('WP_SERVER_ENVIRONMENT', 'local');
+	}
 }
 
 // Include environment specific configs
